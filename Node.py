@@ -23,7 +23,6 @@ class Node():
                 if element not in counter:
                     counter[element] = 0
                 counter[element] += 1
-        print(counter)
         return counter
 
     def entropy(self,probability):
@@ -34,10 +33,8 @@ class Node():
         probability = 0
         remainder_return = 0
         for key,value in self.count_rows(self.subdataset,column).items():
-            print(value)
             probability = value / len(self.classification)
             remainder_return =+ probability*self.entropy(probability)
-        print(remainder_return)
         return remainder_return
 
     def best_gain(self):
@@ -49,10 +46,44 @@ class Node():
                 self.gain = column_gain
                 self.column = i
 
+    def split_dataset(self,value):
+        array_return = []
+        classification_return = []
+        for i in range(len(self.subdataset)):
+            if self.subdataset[i][self.column] == value:
+                self.subdataset[i].pop(self.column)
+                array_return.append(self.subdataset[i])
+                classification_return.append(self.classification[i])
+        return array_return,classification_return
+
     def tree_learning(self):
+        classification_values = self.count_rows(self.classification,0)
+        if (len(classification_values) < 2):
+            print(classification_values)
+            return 0
+        if(len(self.subdataset) == 0):
+            #return plurality of father
+            print("Pluralidad pdre")
+            return 0
+        if(len(self.subdataset[0]) == 0):
+            print("pluralidad")
+            print (classification_values)
+            return 0
+
         self.best_gain()
-        values = self.count_rows(self.subdataset,self.column)
-        print(values)         
+        if(self.gain == 0):
+            print("Ganancia cero")
+            return 0
+
+        column_values = self.count_rows(self.subdataset,self.column)
+        for key in column_values:
+            dat,clas = self.split_dataset(key)
+            tree_node = Node(dat,clas)
+            print("----------------")
+            tree_node.tree_learning()
+            self.branch.append(tree_node)
+        
+               
 
 
 classification = ['Si','Si','No','Si','Si','No','No','Si','No','Si','Si','No','No','Si','No','Si','Si','Si','Si','Si','No']
