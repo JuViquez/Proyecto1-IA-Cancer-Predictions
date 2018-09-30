@@ -12,4 +12,4 @@ class Leaf(DecisionTreeNode):
         return self.prediction
 
     def print_tree(self,num):
-        print('  '*num+"HOJA "+self.question +str(self.prediction))
+        print('  '*num+"  HOJA "+self.question +str(self.prediction))

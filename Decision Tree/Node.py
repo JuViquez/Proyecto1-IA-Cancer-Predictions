@@ -1,4 +1,5 @@
 import math
+import copy
 from DecisionTreeNode import DecisionTreeNode
 from Leaf import Leaf
 
@@ -54,7 +55,7 @@ class Node(DecisionTreeNode):
     def split_dataset(self,value):
         array_return = []
         classification_return = []
-        subdataset_copy = self.subdataset.copy()
+        subdataset_copy = copy.deepcopy(self.subdataset)
         for i in range(len(subdataset_copy)):
             if subdataset_copy[i][self.column] == value:
                 del subdataset_copy[i][self.column]
@@ -70,17 +71,19 @@ class Node(DecisionTreeNode):
         return default
 
     def tree_learning(self,num):
+        
         if(len(self.subdataset) == 0):
             return 1
+
         classification_values = self.count_rows(self.classification,0)
         difnum =+ num + 1
         if (len(classification_values) < 2 or len(self.subdataset[0]) == 0):
             return classification_values
         
         self.best_gain()
-
+        
         if(self.gain == 0):
-            print("Ganancia cero")
+            print("Ganancia cero - error")
             return 4
 
         column_values = self.count_rows(self.subdataset,self.column)
@@ -88,15 +91,16 @@ class Node(DecisionTreeNode):
             dat,clas = self.split_dataset(key)
             tree_node = Node(dat.copy(),clas.copy())
             tree_node.question = key
-            self.branch.append(tree_node)
-            del tree_node #probar
-        for i in range(len(self.branch)):
-            response = self.branch[i].tree_learning(difnum)
+            response = tree_node.tree_learning(difnum)
             if isinstance(response,dict):
-                self.branch[i] = Leaf(self.plurality(response),self.branch[i].question,self.column)
+                leaf_node =  Leaf(self.plurality(response),tree_node.question,self.column)
+                self.branch.append(leaf_node)
             elif response == 1:
                 dictionary = self.count_rows(self.classification,0)
-                self.branch[i] = Leaf(self.plurality(dictionary),self.question,self.column)
+                leaf_node = Leaf(self.plurality(dictionary),self.question,self.column)
+                self.branch.append(leaf_node)
+            else: 
+                self.branch.append(tree_node)
         return 0
 
     def print_tree(self,num):
@@ -132,28 +136,15 @@ dataset = [
     ['No', 'No', 'No', 'No', 'None', '1', 'No', 'No', 'Thai', '10'],
     ['Yes', 'Yes', 'Yes', 'Yes', 'Full', '1', 'No', 'No', 'Burger', '60']
 ]
-dataset2 = [
-    ['Yes', 'No', 'No', 'Yes', 'Some', '3', 'No', 'Yes', 'French', '10'],
-    ['Yes', 'No', 'No', 'Yes', 'Full', '1', 'No', 'No', 'Thai', '60'],
-    ['No', 'Yes', 'No', 'No', 'Some', '1', 'No', 'No', 'Burger', '10'],
-    ['Yes', 'No', 'Yes', 'Yes', 'Full', '1', 'Yes', 'No', 'Thai', '30'],
-    ['Yes', 'No', 'Yes', 'No', 'Full', '3', 'No', 'Yes', 'French', '80'],
-    ['No', 'Yes', 'No', 'Yes', 'Some', '2', 'Yes', 'Yes', 'Italian', '10'],
-    ['No', 'Yes', 'No', 'No', 'None', '1', 'Yes', 'No', 'Burger', '10'],
-    ['No', 'No', 'No', 'Yes', 'Some', '2', 'Yes', 'Yes', 'Thai', '10'],
-    ['No', 'Yes', 'Yes', 'No', 'Full', '1', 'Yes', 'No', 'Burger', '80'],
-    ['Yes', 'Yes', 'Yes', 'Yes', 'Full', '3', 'No', 'Yes', 'Italian', '30'],
-    ['No', 'No', 'No', 'No', 'None', '1', 'No', 'No', 'Thai', '10'],
-    ['Yes', 'Yes', 'Yes', 'Yes', 'Full', '1', 'No', 'No', 'Burger', '60']
-]
 
-
-nodo = Node(dataset[:],classification)
+nodo = Node(dataset,classification)
 nodo.tree_learning(0)
 nodo.print_tree(0)
-print(dataset2)
-for i in range(len(dataset2)):
-    print(dataset2[i])
-    print(nodo.predict(dataset2[i]))
+print(dataset)
+
+#print(dataset2)
+for i in range(len(dataset)):
+    print(dataset[i])
+    print(nodo.predict(dataset[i]))
     print(classification[i])
     print("--------------------------------------------------")
