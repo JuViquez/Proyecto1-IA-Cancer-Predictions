@@ -3,19 +3,9 @@ from sklearn.preprocessing import StandardScaler
 import pandas as pd
 
 def test_preprocess_data_empty_array_exception():
-    data_manager = DataManager([[]])
-    with pytest.raises(EmptyArray):
+    data_manager = DataManager([])
+    with pytest.raises(EmptyDataset):
            data_manager.preprocess_data([])
-
-def test_preprocess_data_column_data_type_exception():
-    dataset = [
-                [10000, 'b', 10],
-                [5000, 'c', 0],
-                [1000, 0, 12]
-              ]
-    data_manager = DataManager(dataset)
-    with pytest.raises(ColumnDataType):
-           data_manager.preprocess_data([-1])
 
 def test_preprocess_data_output():
     dataset = [
@@ -23,33 +13,53 @@ def test_preprocess_data_output():
                 [5000, 100, 20, 35],
                 [1000, 10, 0, 12]
               ]
-    dataset = pd.DataFrame(dataset)
     data_manager = DataManager(dataset)
+    dataset = pd.DataFrame(dataset)
     sc = StandardScaler()
     output_X = sc.fit_transform(dataset.iloc[:, :-1].values)
     X, y = data_manager.preprocess_data(-1) 
     assert X == output_X and y == dataset.iloc[:, 3].values
 
-
-def test_preprocess_data_output_dataset_with_nulls():
+def test_split_X_y_output():
     dataset = [
-                [100, 100, 10],
-                [50,  50],
-                [None, 10]
+                [10000, 50, 10, 100],
+                [5000, 100, 20, 35],
+                [1000, 10, 0, 12]
               ]
-    dataset = pd.DataFrame(dataset)
     data_manager = DataManager(dataset)
+    dataset = pd.DataFrame(dataset)
+    X, y = data_manager.split_X_y(-1)
+    assert X == dataset.iloc[:, :-1].values and y == dataset.iloc[:, 3].values
     
-    dataset.loc[2,0] = 75
-    dataset.loc[1,2] = 10
-    dataset.loc[2,2] = 10
-    y_test = dataset[1].values
-    sc = StandardScaler()
+def test_add_column_result():
+    dataset = [
+                [10000, 50],
+                [5000, 100],
+                [1000, 10]
+              ]
+    column = [1,2,3]
     
-    dataset = dataset.drop(columns=[1])
-    output_X = sc.fit_transform(dataset.values)
-  
-    X, y = data_manager.preprocess_data([1]) 
-    assert X == output_X and y == y_test
-
+    expected_result = pd.DataFrame(  [
+                [10000, 50, 1],
+                [5000, 100, 2],
+                [1000, 10, 3]
+              ]
+            )
+    data_manager = DataManager(dataset)
+    data_manager.add_column(column)
+    assert expected_result.equals(data_manager.dataset)
+    
+def test_shuffle_dataset_result():
+    dataset = [
+                [10000, 50, 10, 100],
+                [5000, 100, 20, 35],
+                [1000, 10, 0, 12]
+              ]
+    data_manager = DataManager(dataset)
+    data_manager.shuffle_dataset()
+    assert not data_manager.dataset.equals(pd.DataFrame(dataset)) 
+    
+    
+    
+    
     
