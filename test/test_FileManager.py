@@ -1,6 +1,7 @@
 import pytest
 import os
 import pandas as pd
+import numpy as np
 from source.datahandlers.FileManager import csv_to_dataset
 from source.datahandlers.FileManager import dataset_to_csv
 from source.datahandlers.FileManager import write_to_log
@@ -32,7 +33,7 @@ def test_dataset_to_csv_output():
     dataset = pd.DataFrame(dataset)
     dataset_to_csv("datasets/test_dataset.csv", dataset)
     dataset2 = pd.read_csv("datasets/test_dataset.csv")
-    assert dataset.equals(dataset2)
+    assert np.array_equal(dataset.values, dataset2.values)
 
 def test_dataset_to_csv_type_error():
     with pytest.raises(TypeError):
@@ -53,7 +54,7 @@ def test_write_to_log_output():
         os.remove("logs/test_log.log")
     test_log_msg = "Test log msg\n"
     write_to_log("logs/test_log.log", test_log_msg)
-    f = open("logs/test_log_msg", "r")
+    f = open("logs/test_log.log", "r")
     content = f.read()
     f.close()
     assert content == test_log_msg
