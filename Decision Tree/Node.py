@@ -1,16 +1,18 @@
 import math
+import copy
+from DecisionTreeNode import DecisionTreeNode
 from Leaf import Leaf
 
-class Node():
+
+class Node(DecisionTreeNode):
     def __init__(self,
                 subdataset,
                 classification):
+        super().__init__(None,0)
         self.subdataset = subdataset
         self.classification = classification
         self.branch = []
-        self.column = 0
         self.gain = 0
-        self.question = None
         
     def count_rows(self,array_type,column):
         counter = {}
@@ -28,8 +30,10 @@ class Node():
         return counter
 
     def entropy(self,probability):
-        entropy = probability*math.log2(probability) + (1 - probability)*math.log2(1 - probability)
-        return entropy * -1
+        entropy = 0
+        if(probability != 0 and probability != 1):
+            entropy = -1 * (probability*math.log2(probability) + (1 - probability)*math.log2(1 - probability))
+        return entropy
 
     def remainder(self,column):
         probability = 0
@@ -51,7 +55,7 @@ class Node():
     def split_dataset(self,value):
         array_return = []
         classification_return = []
-        subdataset_copy = self.subdataset.copy()
+        subdataset_copy = copy.deepcopy(self.subdataset)
         for i in range(len(subdataset_copy)):
             if subdataset_copy[i][self.column] == value:
                 del subdataset_copy[i][self.column]
@@ -67,62 +71,80 @@ class Node():
         return default
 
     def tree_learning(self,num):
-        classification_values = self.count_rows(self.classification,0)
-        difnum =+ num + 1
-        if (len(classification_values) < 2):
-            return classification_values
+        
         if(len(self.subdataset) == 0):
             return 1
-        if(len(self.subdataset[0]) == 0):
+
+        classification_values = self.count_rows(self.classification,0)
+        difnum =+ num + 1
+        if (len(classification_values) < 2 or len(self.subdataset[0]) == 0):
             return classification_values
+        
         self.best_gain()
+        
         if(self.gain == 0):
-            print("Ganancia cero")
+            print("Ganancia cero - error")
             return 4
+
         column_values = self.count_rows(self.subdataset,self.column)
         for key in column_values:
             dat,clas = self.split_dataset(key)
             tree_node = Node(dat.copy(),clas.copy())
             tree_node.question = key
-            self.branch.append(tree_node)
-            del tree_node #probar
-        for i in range(len(self.branch)):
-            response = self.branch[i].tree_learning(difnum)
+            response = tree_node.tree_learning(difnum)
             if isinstance(response,dict):
-                self.branch[i] = Leaf(self.plurality(response),self.branch[i].question)
+                leaf_node =  Leaf(self.plurality(response),tree_node.question,self.column)
+                self.branch.append(leaf_node)
+            elif response == 1:
+                dictionary = self.count_rows(self.classification,0)
+                leaf_node = Leaf(self.plurality(dictionary),self.question,self.column)
+                self.branch.append(leaf_node)
+            else: 
+                self.branch.append(tree_node)
         return 0
+
+    def print_tree(self,num):
+        num += 1
+        for node in self.branch:
+            print('  '*num + node.question+"  column: "+str(self.column))
+            node.print_tree(num)
+
+    def predict(self,row):
+        for node in self.branch:
+            if node.question == row[self.column]:
+                del row[self.column]
+                print(row)
+                return node.predict(row)
         
                
 columnas = ['Tipo', 'Curso', 'Interes', 'Tiempo Disponible', 'Conocimiento','Clasificador']
 
-classification = ['Si','Si','No','Si','Si','No','No','Si','No','Si','Si','No','No','Si','No','Si','Si','Si','Si','Si','No']
+#classification = ['Si','Si','No','Si','Si','No','No','Si','No','Si','Si','No','No','Si','No','Si','Si','Si','Si','Si','No']
+classification = ['Yes','No','Yes','Yes','No','Yes','No','Yes','No','No','No','Yes']
 
 dataset = [
-        ["Proyecto corto", 'IA', 'C', 'Alto', 'M'],
-        ["Examen", 'IA', 'L', 'Alto', 'B'],
-        ["Tarea", 'Seminario','S', 'Bajo', 'A'],
-        ["Proyecto", 'AP', 'S', 'Medio', 'A'],
-        ["Tarea", 'Seminario', 'L', 'Alto', 'M'],
-        ["Proyecto corto", 'AP', 'C', 'Medio', 'B'],
-        ["Examen", 'Seminario', 'S', 'Medio', 'A'],
-        ["Proyecto", 'AP', 'S', 'Alto', 'B'],
-        ["Proyecto", 'Redes', 'C', 'Medio', 'M'],
-        ["Examen", 'Seminario', 'S', 'Bajo', 'M'],
-        ["Proyecto corto", 'IA', 'S', 'Alto', 'B'],
-        ["Examen", 'Seminario', 'L', 'Medio', 'A'],
-        ["Tarea", 'AP', 'C', 'Bajo', 'B'],
-        ["Proyecto", 'IA', 'C', 'Medio', 'M'],
-        ["Tarea", 'Redes', 'L', 'Medio', 'M'],
-        ["Examen", 'Redes', 'L', 'Bajo', 'A'],
-        ["Proyecto", 'Seminario', 'L', 'Bajo', 'A'],
-        ["Proyecto", 'IA', 'S', 'Medio', 'M'],
-        ["Tarea", 'AP', 'C', 'Medio', 'B'],
-        ["Tarea", 'IA', 'C', 'Medio', 'B'],
-        ["Examen", 'Seminario', 'S', 'Medio', 'B'],
+    ['Yes', 'No', 'No', 'Yes', 'Some', '3', 'No', 'Yes', 'French', '10'],
+    ['Yes', 'No', 'No', 'Yes', 'Full', '1', 'No', 'No', 'Thai', '60'],
+    ['No', 'Yes', 'No', 'No', 'Some', '1', 'No', 'No', 'Burger', '10'],
+    ['Yes', 'No', 'Yes', 'Yes', 'Full', '1', 'Yes', 'No', 'Thai', '30'],
+    ['Yes', 'No', 'Yes', 'No', 'Full', '3', 'No', 'Yes', 'French', '80'],
+    ['No', 'Yes', 'No', 'Yes', 'Some', '2', 'Yes', 'Yes', 'Italian', '10'],
+    ['No', 'Yes', 'No', 'No', 'None', '1', 'Yes', 'No', 'Burger', '10'],
+    ['No', 'No', 'No', 'Yes', 'Some', '2', 'Yes', 'Yes', 'Thai', '10'],
+    ['No', 'Yes', 'Yes', 'No', 'Full', '1', 'Yes', 'No', 'Burger', '80'],
+    ['Yes', 'Yes', 'Yes', 'Yes', 'Full', '3', 'No', 'Yes', 'Italian', '30'],
+    ['No', 'No', 'No', 'No', 'None', '1', 'No', 'No', 'Thai', '10'],
+    ['Yes', 'Yes', 'Yes', 'Yes', 'Full', '1', 'No', 'No', 'Burger', '60']
 ]
+
 nodo = Node(dataset,classification)
-data1 = [1,2,3]
-data2 = data1.copy()
-data2.pop(1)
-print(data1)
 nodo.tree_learning(0)
+nodo.print_tree(0)
+print(dataset)
+
+#print(dataset2)
+for i in range(len(dataset)):
+    print(dataset[i])
+    print(nodo.predict(dataset[i]))
+    print(classification[i])
+    print("--------------------------------------------------")
