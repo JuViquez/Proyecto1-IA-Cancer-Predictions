@@ -5,12 +5,8 @@ from Leaf import Leaf
 
 
 class Node(DecisionTreeNode):
-    def __init__(self,
-                subdataset,
-                classification):
+    def __init__(self):
         super().__init__(None,0)
-        self.subdataset = subdataset
-        self.classification = classification
         self.branch = []
         self.gain = 0
         
@@ -35,32 +31,38 @@ class Node(DecisionTreeNode):
             entropy = -1 * (probability*math.log2(probability) + (1 - probability)*math.log2(1 - probability))
         return entropy
 
-    def remainder(self,column):
+    def remainder(self,subdataset,classification,column):
         probability = 0
         remainder_return = 0
-        for key,value in self.count_rows(self.subdataset,column).items():
-            probability = value / len(self.classification)
-            remainder_return =+ probability*self.entropy(probability)
+        save_column = self.column
+        for key,value in self.count_rows(subdataset,column).items():
+            probability = value / len(classification)
+            self.column = column
+            value_dataset, value_classification = self.split_dataset(subdataset,classification,key)
+            sub_rows = self.count_rows(value_classification,0)
+            sub_probability = next(iter(sub_rows.values())) / value
+            remainder_return += probability*self.entropy(sub_probability)            
+        self.column = save_column
         return remainder_return
 
-    def best_gain(self):
-        num = next(iter(self.count_rows(self.classification,0).values())) / len(self.classification)
+    def best_gain(self,subdataset,classification):
+        num = next(iter(self.count_rows(classification,0).values())) / len(classification)
         dataset_entropy = self.entropy(num)
-        for i in range(len(self.subdataset[0])):
-            column_gain = dataset_entropy - self.remainder(i)
+        for i in range(len(subdataset[0])):
+            column_gain = dataset_entropy - self.remainder(subdataset,classification,i)
             if column_gain > self.gain:
                 self.gain = column_gain
                 self.column = i
 
-    def split_dataset(self,value):
+    def split_dataset(self,subdataset,classification,value):
         array_return = []
         classification_return = []
-        subdataset_copy = copy.deepcopy(self.subdataset)
+        subdataset_copy = copy.deepcopy(subdataset)
         for i in range(len(subdataset_copy)):
             if subdataset_copy[i][self.column] == value:
                 del subdataset_copy[i][self.column]
                 array_return.append(subdataset_copy[i])
-                classification_return.append(self.classification[i])
+                classification_return.append(classification[i])
         return array_return,classification_return
 
     def plurality(self,prediction):
@@ -70,33 +72,33 @@ class Node(DecisionTreeNode):
                 default = {tag : prediction[tag]}
         return default
 
-    def tree_learning(self,num):
+    def tree_learning(self,subdataset,classification,num):
         
-        if(len(self.subdataset) == 0):
+        if(len(subdataset) == 0):
             return 1
 
-        classification_values = self.count_rows(self.classification,0)
+        classification_values = self.count_rows(classification,0)
         difnum =+ num + 1
-        if (len(classification_values) < 2 or len(self.subdataset[0]) == 0):
+        if (len(classification_values) < 2 or len(subdataset[0]) == 0):
             return classification_values
         
-        self.best_gain()
+        self.best_gain(subdataset,classification)
         
         if(self.gain == 0):
             print("Ganancia cero - error")
-            return 4
+            return 1
 
-        column_values = self.count_rows(self.subdataset,self.column)
+        column_values = self.count_rows(subdataset,self.column)
         for key in column_values:
-            dat,clas = self.split_dataset(key)
-            tree_node = Node(dat.copy(),clas.copy())
+            dat,clas = self.split_dataset(subdataset,classification,key)
+            tree_node = Node()
             tree_node.question = key
-            response = tree_node.tree_learning(difnum)
+            response = tree_node.tree_learning(dat,clas,difnum)
             if isinstance(response,dict):
                 leaf_node =  Leaf(self.plurality(response),tree_node.question,self.column)
                 self.branch.append(leaf_node)
             elif response == 1:
-                dictionary = self.count_rows(self.classification,0)
+                dictionary = self.count_rows(classification,0)
                 leaf_node = Leaf(self.plurality(dictionary),self.question,self.column)
                 self.branch.append(leaf_node)
             else: 
@@ -137,8 +139,8 @@ dataset = [
     ['Yes', 'Yes', 'Yes', 'Yes', 'Full', '1', 'No', 'No', 'Burger', '60']
 ]
 
-nodo = Node(dataset,classification)
-nodo.tree_learning(0)
+nodo = Node()
+nodo.tree_learning(dataset,classification,0)
 nodo.print_tree(0)
 print(dataset)
 
