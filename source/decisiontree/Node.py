@@ -1,5 +1,4 @@
 import math
-import copy
 from source.decisiontree.DecisionTreeNode import DecisionTreeNode
 from source.decisiontree.Leaf import Leaf
 
@@ -57,17 +56,6 @@ class Node(DecisionTreeNode):
                 self.gain = column_gain
                 self.column = i
 
-    def split_dataset(self,subdataset,classification,value):
-        array_return = []
-        classification_return = []
-        subdataset_copy = copy.deepcopy(subdataset)
-        for i in range(len(subdataset_copy)):
-            if subdataset_copy[i][self.column] == value:
-                del subdataset_copy[i][self.column]
-                array_return.append(subdataset_copy[i])
-                classification_return.append(classification[i])
-        return array_return,classification_return
-
     def plurality(self,prediction):
         if not prediction:
             return {}
@@ -80,7 +68,7 @@ class Node(DecisionTreeNode):
     def print_tree(self,num):
         num += 1
         for node in self.branch:
-            print('  '*num + node.question+"  column: "+str(self.column))
+            print('  '*num + node.question+"  column: "+str(self.column)+" gain "+str(self.gain))
             node.print_tree(num)
 
     def predict(self,row):

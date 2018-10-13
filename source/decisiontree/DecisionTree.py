@@ -1,9 +1,11 @@
+import copy
 from source.decisiontree.Node import Node
 from source.decisiontree.Leaf import Leaf
 
 class DecisionTree():
     def __init__(self):
         self.root = None
+        self.pruning_ratio = 0
     
     def fit(self,X,Y):
         self.root = Node()
@@ -20,7 +22,7 @@ class DecisionTree():
             return 1
         column_values = node.count_rows(subdataset,node.column)
         for key in column_values:
-            dat,clas = node.split_dataset(subdataset,classification,key)
+            dat,clas = self.split_dataset(subdataset,classification,key,node.column)
             tree_node = Node()
             tree_node.question = key
             response = self.tree_learning(tree_node,dat,clas)
@@ -36,25 +38,75 @@ class DecisionTree():
             else: 
                 node.branch.append(tree_node)
         return 0
+    
+    def split_dataset(self,subdataset,classification,value,column):
+        array_return = []
+        classification_return = []
+        subdataset_copy = copy.deepcopy(subdataset)
+        for i in range(len(subdataset_copy)):
+            if subdataset_copy[i][column] == value:
+                del subdataset_copy[i][column]
+                array_return.append(subdataset_copy[i])
+                classification_return.append(classification[i])
+        return array_return,classification_return
 
-classification = ['Yes','No','Yes','Yes','No','Yes','No','Yes','No','No','No','Yes']
+    def prune(self,ratio):
+        self.pruning_ratio = ratio
+        self.pruning(self.root)
+
+    def pruning(self,node):
+        if isinstance(node,Leaf):
+            return node,False
+        response = True
+        for i in range(len(node.branch)):
+            leaf,pruned = self.pruning(node.branch[i])
+            if not isinstance(leaf,Leaf):
+                response = False
+            if pruned:
+                node.branch[i] = leaf
+        if response:
+            if node.gain <= self.pruning_ratio:
+                new_leaf = Leaf(None,0,node.question,node.column)
+                for i in node.branch:
+                    if i.sample_size >= new_leaf.sample_size:
+                        new_leaf.sample_size = i.sample_size
+                        new_leaf.prediction = i.prediction
+                return new_leaf,True
+        return node,False
+
+
+
+classification = ['Si','Si','No','Si','Si','No','No','Si','No','Si','Si','No','No','Si','No','Si','Si','Si','Si','Si','No']
 
 dataset = [
-    ['Yes', 'No', 'No', 'Yes', 'Some', '3', 'No', 'Yes', 'French', '10'],
-    ['Yes', 'No', 'No', 'Yes', 'Full', '1', 'No', 'No', 'Thai', '60'],
-    ['No', 'Yes', 'No', 'No', 'Some', '1', 'No', 'No', 'Burger', '10'],
-    ['Yes', 'No', 'Yes', 'Yes', 'Full', '1', 'Yes', 'No', 'Thai', '30'],
-    ['Yes', 'No', 'Yes', 'No', 'Full', '3', 'No', 'Yes', 'French', '80'],
-    ['No', 'Yes', 'No', 'Yes', 'Some', '2', 'Yes', 'Yes', 'Italian', '10'],
-    ['No', 'Yes', 'No', 'No', 'None', '1', 'Yes', 'No', 'Burger', '10'],
-    ['No', 'No', 'No', 'Yes', 'Some', '2', 'Yes', 'Yes', 'Thai', '10'],
-    ['No', 'Yes', 'Yes', 'No', 'Full', '1', 'Yes', 'No', 'Burger', '80'],
-    ['Yes', 'Yes', 'Yes', 'Yes', 'Full', '3', 'No', 'Yes', 'Italian', '30'],
-    ['No', 'No', 'No', 'No', 'None', '1', 'No', 'No', 'Thai', '10'],
-    ['Yes', 'Yes', 'Yes', 'Yes', 'Full', '1', 'No', 'No', 'Burger', '60']
+    ["Proyecto corto", 'IA', 'C', 'Alto', 'M'],
+    ["Examen", 'IA', 'L', 'Alto', 'B'],
+    ["Tarea", 'Seminario','S', 'Bajo', 'A'],
+    ["Proyecto", 'AP', 'S', 'Medio', 'A'],
+    ["Tarea", 'Seminario', 'L', 'Alto', 'M'],
+    ["Proyecto corto", 'AP', 'C', 'Medio', 'B'],
+    ["Examen", 'Seminario', 'S', 'Medio', 'A'],
+    ["Proyecto", 'AP', 'S', 'Alto', 'B'],
+    ["Proyecto", 'Redes', 'C', 'Medio', 'M'],
+    ["Examen", 'Seminario', 'S', 'Bajo', 'M'],
+    ["Proyecto corto", 'IA', 'S', 'Alto', 'B'],
+    ["Examen", 'Seminario', 'L', 'Medio', 'A'],
+    ["Tarea", 'AP', 'C', 'Bajo', 'B'],
+    ["Proyecto", 'IA', 'C', 'Medio', 'M'],
+    ["Tarea", 'Redes', 'L', 'Medio', 'M'],
+    ["Examen", 'Redes', 'L', 'Bajo', 'A'],
+    ["Proyecto", 'Seminario', 'L', 'Bajo', 'A'],
+    ["Proyecto", 'IA', 'S', 'Medio', 'M'],
+    ["Tarea", 'AP', 'C', 'Medio', 'B'],
+    ["Tarea", 'IA', 'C', 'Medio', 'B'],
+    ["Examen", 'Seminario', 'S', 'Medio', 'B']
 ]
 
 DT = DecisionTree()
 DT.fit(dataset,classification)
 
+DT.root.print_tree(0)
+
+DT.prune(0.92)
+print("------------------------------------------")
 DT.root.print_tree(0)
