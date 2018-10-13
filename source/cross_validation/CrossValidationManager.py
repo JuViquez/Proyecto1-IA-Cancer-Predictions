@@ -14,11 +14,9 @@ class CrossValidationManager(object):
         if(fold > self.k):
             raise ValueError("fold must be a number between 0 and k ")
         X_length = len(self.X)
-        fold_size = X // self.k
+        fold_size = X_length // self.k
         lower_index = fold * fold_size
         upper_index = lower_index  + fold_size
-        if(upper_index > X_length):
-            upper_index = X_length
         X_test = X[lower_index : upper_index]
         y_test = y[lower_index : upper_index]
         
