@@ -1,7 +1,4 @@
 {
   "test/test_FileManager.py::test_dataset_to_csv_file_exist": true,
-  "test/test_FileManager.py::test_dataset_to_csv_output": true,
-  "test/test_FileManager.py::test_dataset_to_csv_type_error": true,
-  "test/test_FileManager.py::test_write_to_log_file_exist": true,
-  "test/test_FileManager.py::test_write_to_log_output": true
+  "test/test_FileManager.py::test_write_to_log_file_exist": true
 }
