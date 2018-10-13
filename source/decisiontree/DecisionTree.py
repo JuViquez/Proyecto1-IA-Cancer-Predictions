@@ -67,10 +67,15 @@ class DecisionTree():
         if response:
             if node.gain <= self.pruning_ratio:
                 new_leaf = Leaf(None,0,node.question,node.column)
+                summ = {}
                 for i in node.branch:
-                    if i.sample_size >= new_leaf.sample_size:
-                        new_leaf.sample_size = i.sample_size
-                        new_leaf.prediction = i.prediction
+                    if i.prediction not in summ:
+                        summ[i.prediction] = i.sample_size
+                    else:
+                        summ[i.prediction] += i.sample_size 
+                max_predictor = max(summ, key = summ.get)
+                new_leaf.prediction = max_predictor
+                new_leaf.sample_size = summ[max_predictor]
                 return new_leaf,True
         return node,False
 
