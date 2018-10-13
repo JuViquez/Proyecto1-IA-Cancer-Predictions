@@ -1,8 +1,9 @@
-class Leaf():
+class DecisionTreeNode():
     def __init__(self,
-                prediction,
                 question,
                 column):
-        self.prediction = prediction
         self.question = question
         self.column = column
+    
+    def predict(self,row):
+        pass
