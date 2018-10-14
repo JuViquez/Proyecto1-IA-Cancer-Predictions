@@ -1,9 +1,11 @@
 import copy
-from source.decisiontree.Node import Node
-from source.decisiontree.Leaf import Leaf
+from source.models.Model import Model
+from source.models.decisiontree.Node import Node
+from source.models.decisiontree.Leaf import Leaf
 
-class DecisionTree():
+class DecisionTree(Model):
     def __init__(self):
+        super().__init__(0)
         self.root = None
         self.pruning_ratio = 0
     
@@ -79,39 +81,15 @@ class DecisionTree():
                 return new_leaf,True
         return node,False
 
+    def predict(self,X):
+        row = copy.deepcopy(X)
+        return self.prediction(self.root,row)
 
-
-classification = ['Si','Si','No','Si','Si','No','No','Si','No','Si','Si','No','No','Si','No','Si','Si','Si','Si','Si','No']
-
-dataset = [
-    ["Proyecto corto", 'IA', 'C', 'Alto', 'M'],
-    ["Examen", 'IA', 'L', 'Alto', 'B'],
-    ["Tarea", 'Seminario','S', 'Bajo', 'A'],
-    ["Proyecto", 'AP', 'S', 'Medio', 'A'],
-    ["Tarea", 'Seminario', 'L', 'Alto', 'M'],
-    ["Proyecto corto", 'AP', 'C', 'Medio', 'B'],
-    ["Examen", 'Seminario', 'S', 'Medio', 'A'],
-    ["Proyecto", 'AP', 'S', 'Alto', 'B'],
-    ["Proyecto", 'Redes', 'C', 'Medio', 'M'],
-    ["Examen", 'Seminario', 'S', 'Bajo', 'M'],
-    ["Proyecto corto", 'IA', 'S', 'Alto', 'B'],
-    ["Examen", 'Seminario', 'L', 'Medio', 'A'],
-    ["Tarea", 'AP', 'C', 'Bajo', 'B'],
-    ["Proyecto", 'IA', 'C', 'Medio', 'M'],
-    ["Tarea", 'Redes', 'L', 'Medio', 'M'],
-    ["Examen", 'Redes', 'L', 'Bajo', 'A'],
-    ["Proyecto", 'Seminario', 'L', 'Bajo', 'A'],
-    ["Proyecto", 'IA', 'S', 'Medio', 'M'],
-    ["Tarea", 'AP', 'C', 'Medio', 'B'],
-    ["Tarea", 'IA', 'C', 'Medio', 'B'],
-    ["Examen", 'Seminario', 'S', 'Medio', 'B']
-]
-
-DT = DecisionTree()
-DT.fit(dataset,classification)
-
-DT.root.print_tree(0)
-
-DT.prune(0.92)
-print("------------------------------------------")
-DT.root.print_tree(0)
+    def prediction(self,node,row):
+        for branch in node.branch:
+            if branch.question == row[node.column]:
+                del row[node.column]
+                if isinstance(branch,Leaf):
+                    return branch.prediction
+                return self.prediction(branch,row)
+        return None

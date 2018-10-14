@@ -1,6 +1,6 @@
 import math
-from source.decisiontree.DecisionTreeNode import DecisionTreeNode
-from source.decisiontree.Leaf import Leaf
+from source.models.decisiontree.DecisionTreeNode import DecisionTreeNode
+from source.models.decisiontree.Leaf import Leaf
 
 
 class Node(DecisionTreeNode):
@@ -70,10 +70,3 @@ class Node(DecisionTreeNode):
         for node in self.branch:
             print('  '*num + node.question+"  column: "+str(self.column)+" gain "+str(self.gain))
             node.print_tree(num)
-
-    def predict(self,row):
-        for node in self.branch:
-            if node.question == row[self.column]:
-                del row[self.column]
-                print(row)
-                return node.predict(row)

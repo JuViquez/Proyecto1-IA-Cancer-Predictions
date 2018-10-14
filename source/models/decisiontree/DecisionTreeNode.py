@@ -4,6 +4,3 @@ class DecisionTreeNode():
                 column):
         self.question = question
         self.column = column
-    
-    def predict(self,row):
-        pass
