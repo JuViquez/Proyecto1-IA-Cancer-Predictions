@@ -1,6 +1,7 @@
-from sklearn.preprocessing import StandardScaler
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import LabelEncoder
 from source.exceptions.EmptyDataset import EmptyDataset
 
 class DataManager:
@@ -28,6 +29,23 @@ class DataManager:
     
     def shuffle_dataset(self):
         self.dataset = self.dataset.sample(frac=1).reset_index(drop=True)
+    
+    def create_encoder(self, labels):
+        label_encoder = LabelEncoder()
+        label_encoder.fit(labels)
+        return label_encoder
+
+    def split_train_test(self, X, y, test_size = 0.25):
+        if(test_size < 0 or test_size > 1):
+            raise ValueError("test_size must be a number between 0 and 1")
+        size = round(len(X) * test_size)
+        X_test = X[0:size]
+        y_test = X[0:size]
+        del_range = list(range(size))
+        X_train = np.delete(X, del_range, axis = 0)
+        y_train = np.delete(y, del_range, axis = 0)
+        return X_train, y_train, X_test, y_test
+        
         
         
         

@@ -1,8 +1,8 @@
-
 import pytest
-from sklearn.preprocessing import StandardScaler
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import LabelEncoder
 from source.exceptions.EmptyDataset import EmptyDataset
 from source.datahandlers.DataManager import DataManager
 
@@ -63,6 +63,17 @@ def test_shuffle_dataset_result():
     data_manager = DataManager(dataset)
     data_manager.shuffle_dataset()
     assert not np.array_equal(data_manager.dataset, pd.DataFrame(dataset)) 
+    
+def test_create_encoder_output():
+    labels = ['a','b','c', 'c']
+    expected_label_encoder = LabelEncoder()
+    expected_output = expected_label_encoder.fit(labels)
+    
+    data_manager = DataManager([])
+    actual_output = data_manager.create_encoder(labels)
+    assert np.array_equal(expected_output.transform(labels), actual_output.transform(labels))
+    
+
     
     
     

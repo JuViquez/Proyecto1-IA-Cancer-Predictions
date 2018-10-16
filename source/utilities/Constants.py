@@ -1,0 +1,2 @@
+LOGS_DIRECTORY = 'logs'
+DATASETS_DIRECTORY = 'datasets'
