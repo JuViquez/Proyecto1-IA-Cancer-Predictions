@@ -53,7 +53,7 @@ class CrossValidationManager(object):
         fold_err_v = 0
         fold = 0
         for fold in range(self.k):
-            X_train, y_train, X_test, y_test = self.partition(self, fold)
+            X_train, y_train, X_test, y_test = self.partition(fold)
             self.learner.fit(X_train, y_train)
             fold_err_t +=  self.error_rate(X_train, y_train)
             fold_err_v += self.error_rate(X_test, y_test)

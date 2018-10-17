@@ -40,7 +40,7 @@ class DataManager:
             raise ValueError("test_size must be a number between 0 and 1")
         size = round(len(X) * test_size)
         X_test = X[0:size]
-        y_test = X[0:size]
+        y_test = y[0:size]
         del_range = list(range(size))
         X_train = np.delete(X, del_range, axis = 0)
         y_train = np.delete(y, del_range, axis = 0)

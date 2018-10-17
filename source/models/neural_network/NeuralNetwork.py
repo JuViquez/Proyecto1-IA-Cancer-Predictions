@@ -20,6 +20,7 @@ class NeuralNetwork(Model):
         self.output_activation_func = output_activation_func
 
     def fit(self, X, Y):
+        self.tf_model = tf.keras.models.Sequential()
         self.tf_model.add(tf.keras.layers.Flatten())
         for _ in range(self.size-1):
             self.tf_model.add(tf.keras.layers.Dense(self.neurons_per_layer, 

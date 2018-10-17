@@ -15,7 +15,8 @@ class Program:
         self.y = None
         
     def main(self, args):
-        dataset_path = DATASETS_DIRECTORY + args.prefijo
+        dataset_path = DATASETS_DIRECTORY + '/' + args.prefijo
+        print('opening ' + dataset_path)
         dataset = csv_to_dataset(dataset_path)
         self.data_manager.dataset = dataset
         self.data_manager.shuffle_dataset()
@@ -23,20 +24,28 @@ class Program:
         test_size = args.porcentaje_pruebas
         self.X, self.y = self.data_manager.preprocess_data(args.indice_columna_y)
         
-        model_name = args.nombre_modelo
-        
+        err_t = 0
+        err_v = 0
         if(args.arbol):
-            prune_gain = args.umbral_poda    
-        elif(args.red_neuronal):
+            prune_gain = args.umbral_poda   
+            
+        elif(args.red_neuronal): #neural network
             layers = args.numero_capas
             neurons_hidden_layer = args.unidades_por_capa
             activation_func = args.funcion_activacion
             output_activation_func = args.funcion_activacion_salida
+            err_t, err_v = self.process_neural_network(layers, neurons_hidden_layer,
+                                                 activation_func, output_activation_func,
+                                                 test_size)
+        
+        print('Error de entrenamiento: ' + str(err_t) + 
+              '\n' + 'Error de pruebas: ' + str(err_v) + '\n')
+            
     
     def create_random_forest(self, prune_gain):
         pass
 
-    def create_neural_network(self, layers, neurons_hidden_layer,
+    def process_neural_network(self, layers, neurons_hidden_layer,
                               activation_func, output_activation_func,
                               test_size):
         
@@ -50,14 +59,17 @@ class Program:
         neural_network = NeuralNetwork(layers, neurons_hidden_layer,
                                        neurons_output_layer, activation_func,
                                        output_activation_func)
-        
+        print(neural_network.size)
         cvm = CrossValidationManager(neural_network, X_train, y_train, l0_1_loss)
         err_t, _ = cvm.cross_validation()
+        print(y_test)
         err_v = cvm.error_rate(X_test, y_test)
         
-        predictions = predictions_list(cvm.learner, self.X)
+        predictions = self.predictions_list(cvm.learner, self.X)
         predictions = label_encoder.inverse_transform(predictions)
         self.data_manager.add_column(predictions, column_name = 'predictions' )
+        
+        return err_t, err_v
             
     def choose_activation_function(self,activation_func):
         if activation_func == 'relu':
@@ -70,7 +82,7 @@ class Program:
             return tf.nn.sigmoid
         raise ValueError(activation_function + 'is not an activation function or is not implemented yet')
     
-    def predictions_list(learner, X):
+    def predictions_list(self,learner, X):
         predictions = []
         for x in X:
             prediction = learner.predict(x)
