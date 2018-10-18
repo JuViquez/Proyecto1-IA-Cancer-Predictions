@@ -3,6 +3,7 @@ from sklearn.preprocessing import LabelEncoder
 from source.datahandlers.DataManager import DataManager
 from source.cross_validation.CrossValidationManager import CrossValidationManager
 from source.datahandlers.FileManager import csv_to_dataset
+from source.datahandlers.FileManager import dataset_to_csv
 from source.utilities.Constants import DATASETS_DIRECTORY
 from source.models.neural_network.NeuralNetwork import NeuralNetwork
 from source.utilities.Metrics import l0_1_loss
@@ -26,10 +27,11 @@ class Program:
         
         err_t = 0
         err_v = 0
+        
         if(args.arbol):
-            prune_gain = args.umbral_poda   
+            prune_gain = args.umbral_poda
             
-        elif(args.red_neuronal): #neural network
+        elif args.red_neuronal: #neural network
             layers = args.numero_capas
             neurons_hidden_layer = args.unidades_por_capa
             activation_func = args.funcion_activacion
@@ -37,10 +39,12 @@ class Program:
             err_t, err_v = self.process_neural_network(layers, neurons_hidden_layer,
                                                  activation_func, output_activation_func,
                                                  test_size)
-        
+            prediction_path = DATASETS_DIRECTORY + '/neural_network_predictions_' + args.prefijo
+            dataset_to_csv(prediction_path, self.data_manager.dataset)
+           
         print('Error de entrenamiento: ' + str(err_t) + 
               '\n' + 'Error de pruebas: ' + str(err_v) + '\n')
-            
+        
     
     def create_random_forest(self, prune_gain):
         pass
@@ -59,10 +63,8 @@ class Program:
         neural_network = NeuralNetwork(layers, neurons_hidden_layer,
                                        neurons_output_layer, activation_func,
                                        output_activation_func)
-        print(neural_network.size)
         cvm = CrossValidationManager(neural_network, X_train, y_train, l0_1_loss)
         err_t, _ = cvm.cross_validation()
-        print(y_test)
         err_v = cvm.error_rate(X_test, y_test)
         
         predictions = self.predictions_list(cvm.learner, self.X)
