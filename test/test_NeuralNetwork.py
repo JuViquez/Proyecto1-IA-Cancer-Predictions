@@ -27,7 +27,7 @@ def test_fit_tf_parameters(mock_flatten, mock_dense, mock_sequential):
     nw.tf_model.compile.assert_called_with(optimizer = 'sgd', 
                                           loss='binary_crossentropy', 
                                           metrics = ['accuracy'])
-    nw.tf_model.fit.assert_called_once_with(x,y,2)
+    nw.tf_model.fit.assert_called_once_with(x,y,epochs = 2)
 
 def test_predict_tf_parameters():
     nw = neural_network()
