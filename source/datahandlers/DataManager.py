@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from numbers import Number
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder
 from source.exceptions.EmptyDataset import EmptyDataset
@@ -45,7 +46,6 @@ class DataManager:
         X_train = np.delete(X, del_range, axis = 0)
         y_train = np.delete(y, del_range, axis = 0)
         return X_train, y_train, X_test, y_test
-        
         
         
         
