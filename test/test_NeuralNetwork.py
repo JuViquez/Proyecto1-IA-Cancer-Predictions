@@ -33,4 +33,4 @@ def test_predict_tf_parameters():
     nw = neural_network()
     nw.tf_model = Mock()
     nw.predict([1])
-    nw.tf_model.predict.assert_called_with([[1]])
+    nw.tf_model.predict.assert_called_with([[[1]]])

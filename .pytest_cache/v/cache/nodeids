@@ -1,9 +1,14 @@
 [
-  "test/test_FileManager.py::test_csv_to_dataset_output",
-  "test/test_FileManager.py::test_dataset_to_csv_file_isfile",
-  "test/test_FileManager.py::test_dataset_to_csv_output",
-  "test/test_FileManager.py::test_dataset_to_csv_type_error",
-  "test/test_FileManager.py::test_write_to_log_file_isfile",
-  "test/test_FileManager.py::test_write_to_log_type_error",
-  "test/test_FileManager.py::test_write_to_log_output"
+  "test/test_Node.py::test_count_rows_2d_array",
+  "test/test_Node.py::test_count_rows_list",
+  "test/test_Node.py::test_count_probability",
+  "test/test_Node.py::test_entropy_50",
+  "test/test_Node.py::test_entropy_100",
+  "test/test_Node.py::test_remainder",
+  "test/test_Node.py::test_best_gain_value",
+  "test/test_Node.py::test_best_gain_column",
+  "test/test_Node.py::test_split_dataset_empty",
+  "test/test_Node.py::test_split_dataset",
+  "test/test_Node.py::test_plurality_empty",
+  "test/test_Node.py::test_plurality"
 ]

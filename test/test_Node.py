@@ -1,5 +1,5 @@
 import pytest
-from source.decisiontree.Node import Node
+from source.models.decisiontree.Node import Node
 
 example_node = Node()
 

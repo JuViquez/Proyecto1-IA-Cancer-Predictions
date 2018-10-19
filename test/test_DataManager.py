@@ -6,7 +6,6 @@ from sklearn.preprocessing import LabelEncoder
 from source.exceptions.EmptyDataset import EmptyDataset
 from source.datahandlers.DataManager import DataManager
 
-
 def test_preprocess_data_empty_array_exception():
     data_manager = DataManager([])
     with pytest.raises(EmptyDataset):
@@ -58,8 +57,15 @@ def test_shuffle_dataset_result():
     dataset = [
                 [10000, 50, 10, 100],
                 [5000, 100, 20, 35],
-                [1000, 10, 0, 12]
+                [1000, 10, 0, 12],
+                [10000, 50, 10, 100],
+                [5000, 100, 20, 35],
+                [1000, 10, 0, 12],
+                [1000, 10],
+                [4234, 12],
+                [12113, 9]
               ]
+    
     data_manager = DataManager(dataset)
     data_manager.shuffle_dataset()
     assert not np.array_equal(data_manager.dataset, pd.DataFrame(dataset)) 
@@ -73,9 +79,40 @@ def test_create_encoder_output():
     actual_output = data_manager.create_encoder(labels)
     assert np.array_equal(expected_output.transform(labels), actual_output.transform(labels))
     
+def test_split_train_test_output():
+    X = [
+        [10000, 50],
+        [5000, 100],
+        [1000, 10],
+        [4234, 12],
+        [12113, 9]
+        ]
+    y = [2, 3, 4, 5, 6]
+    
+    data_manager = DataManager([])
+    
+    X_train, y_train, X_test, y_test = data_manager.split_train_test(X, y, test_size = 0.25)
+    
+    expected_X_train = X[1:]
+    expected_y_train = y[1:]
+    
+    expected_X_test = [X[0]]
+    expected_y_test = [y[0]]
+    
+    assert np.array_equal(expected_X_train, X_train)
+    assert np.array_equal(expected_y_train, y_train)
+    
+    assert np.array_equal(expected_X_test, X_test)
+    assert np.array_equal(expected_y_test, y_test)
 
-    
-    
-    
-    
+
+def test_split_train_trest_value_error():
+    test_size_lt_zero = -1
+    test_size_gt_one = 2
+    data_manager = DataManager([])
+    with pytest.raises(ValueError):
+           data_manager.split_train_test([],[], test_size_lt_zero)
+    with pytest.raises(ValueError):
+           data_manager.split_train_test([],[], test_size_gt_one)
+          
     
