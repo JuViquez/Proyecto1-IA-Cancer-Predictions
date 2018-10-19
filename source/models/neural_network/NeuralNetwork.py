@@ -7,7 +7,7 @@ class NeuralNetwork(Model):
     def __init__(self, num_layers, neurons_per_hidden_layer,
                  neurons_output_layer, activation_func = tf.nn.relu,
                  output_activation_func = tf.nn.softmax,
-                 loss = 'sparse_categorical_crossentropy', optimizer = 'adam', epochs = 5):
+                 loss = 'sparse_categorical_crossentropy', optimizer = 'adam', epochs = 10):
         
         super().__init__(size = num_layers)
         self.neurons_per_layer = neurons_per_hidden_layer

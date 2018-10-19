@@ -28,17 +28,18 @@ class Program:
         err_t = 0
         err_v = 0
         
-        if(args.arbol):
+        if args.arbol :
             prune_gain = args.umbral_poda
             
         elif args.red_neuronal: #neural network
             layers = args.numero_capas
             neurons_hidden_layer = args.unidades_por_capa
             activation_func = args.funcion_activacion
+            epochs = args.iteraciones_optimizador
             output_activation_func = args.funcion_activacion_salida
             err_t, err_v = self.process_neural_network(layers, neurons_hidden_layer,
                                                  activation_func, output_activation_func,
-                                                 test_size)
+                                                 test_size, epochs)
             prediction_path = DATASETS_DIRECTORY + '/neural_network_predictions_' + args.prefijo
             dataset_to_csv(prediction_path, self.data_manager.dataset)
            
@@ -51,7 +52,7 @@ class Program:
 
     def process_neural_network(self, layers, neurons_hidden_layer,
                               activation_func, output_activation_func,
-                              test_size):
+                              test_size, epochs):
         
         label_encoder = self.data_manager.create_encoder(self.y)
         self.y = label_encoder.transform(self.y)
@@ -62,7 +63,7 @@ class Program:
         neurons_output_layer = len(label_encoder.classes_)
         neural_network = NeuralNetwork(layers, neurons_hidden_layer,
                                        neurons_output_layer, activation_func,
-                                       output_activation_func)
+                                       output_activation_func, epochs = epochs)
         cvm = CrossValidationManager(neural_network, X_train, y_train, l0_1_loss)
         err_t, _ = cvm.cross_validation()
         err_v = cvm.error_rate(X_test, y_test)
@@ -82,7 +83,7 @@ class Program:
             return tf.nn.softplus
         if activation_func == 'sigmoid':
             return tf.nn.sigmoid
-        raise ValueError(activation_function + 'is not an activation function or is not implemented yet')
+        raise ValueError(activation_func + 'is not an activation function or is not implemented yet')
     
     def predictions_list(self,learner, X):
         predictions = []
