@@ -46,11 +46,7 @@ class Program:
             for tree in random_forest.trees:
                 tree.prune(prune_gain)
             err_t = cvm.error_rate(X_train, y_train)
-            print("Error de entrenamiento(Prunning): "+str(err_t))
             err_v = cvm.error_rate(X_test, y_test)
-            print("Error de pruebas(Prunning): "+str(err_v))
-            
-
             
         elif(args.red_neuronal): #neural network
             layers = args.numero_capas
