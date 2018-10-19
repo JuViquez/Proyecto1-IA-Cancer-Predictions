@@ -1,4 +1,5 @@
 import math
+import numpy as np
 from source.models.decisiontree.DecisionTreeNode import DecisionTreeNode
 from source.models.decisiontree.Leaf import Leaf
 
@@ -11,17 +12,18 @@ class Node(DecisionTreeNode):
         
     def count_rows(self,array_type,column):
         counter = {}
-        if isinstance(array_type[0], list):
+        if isinstance(array_type[0], str):
+            for element in array_type:
+                if element not in counter:
+                    counter[element] = 0
+                counter[element] += 1
+        else:
             for row in array_type:
                 tag = row[column]
                 if tag not in counter:
                     counter[tag] = 0
                 counter[tag] += 1
-        else:
-            for element in array_type:
-                if element not in counter:
-                    counter[element] = 0
-                counter[element] += 1
+            
         return counter
 
     def count_probability(self,subdataset,classification,column,key):

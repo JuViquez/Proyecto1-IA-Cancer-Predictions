@@ -20,7 +20,6 @@ class CrossValidationManager(object):
         upper_index = lower_index  + fold_size
         X_test = self.X[lower_index : upper_index]
         y_test = self.y[lower_index : upper_index]
-        
         del_range = list(range(lower_index, upper_index))
         X_train = np.delete(self.X, del_range, axis = 0 )
         y_train = np.delete(self.y, del_range, axis = 0 )
@@ -38,7 +37,7 @@ class CrossValidationManager(object):
     def cross_validation_wrapper(self):
         size = 0
         while True: 
-            self.size = size + 1
+            self.learner.size = size + 1
             err_t, err_v = self.cross_validation()
             self.err_t.insert(size, err_t)
             self.err_v.insert(size, err_v)

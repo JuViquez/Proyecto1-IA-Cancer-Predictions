@@ -1,5 +1,5 @@
 import pytest
-from source.decisiontree.Node import Node
+from source.models.decisiontree.Node import Node
 
 example_node = Node()
 
@@ -96,42 +96,9 @@ def test_best_gain_column():
     example_node.best_gain(dataset,classification)
     assert example_node.column == 1
 
-def test_split_dataset_empty():
-    dataset, classification = example_node.split_dataset([],[],'0')
-    assert not dataset and not classification
-
-def test_split_dataset():
-    example_node.column = 1
-    dataset = [
-        ['T','0'],['F','0'],['T','0'],
-        ['F','0'],['T','0'],['F','0'],
-        ['T','1'],['F','1'],['T','1'],
-        ['F','1'],['T','1'],['F','1'],
-    ]
-    classification = [
-        'Yes','Yes','Yes',
-        'Yes','Yes','Yes',
-        'No','No','No',
-        'No','No','No'
-    ]
-    result_dataset =[
-        ['T'],['F'],['T'],
-        ['F'],['T'],['F']
-    ]
-    result_class = [
-        'Yes','Yes','Yes',
-        'Yes','Yes','Yes'
-    ]
-    dataset, classification = example_node.split_dataset(dataset,classification,'0')
-    assert dataset == result_dataset and classification == result_class
-
 def test_plurality_empty():
     assert not example_node.plurality({})
 
 def test_plurality():
     prediction = {"Yes":5,"No":7}
     assert example_node.plurality(prediction) == {"No":7}
-"""
-def test_predict():
-
-"""

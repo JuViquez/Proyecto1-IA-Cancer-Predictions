@@ -35,27 +35,3 @@ class RandomForest(Model):
             dataset.append(copy.deepcopy(X[random_number]))
             classification.append(copy.deepcopy(Y[random_number]))
         return dataset, classification
-
-classification = ['Yes','No','Yes','Yes','No','Yes','No','Yes','No','No','No','Yes']
-
-dataset = [
-    ['Yes', 'No', 'No', 'Yes', 'Some', '3', 'No', 'Yes', 'French', '10'],
-    ['Yes', 'No', 'No', 'Yes', 'Full', '1', 'No', 'No', 'Thai', '60'],
-    ['No', 'Yes', 'No', 'No', 'Some', '1', 'No', 'No', 'Burger', '10'],
-    ['Yes', 'No', 'Yes', 'Yes', 'Full', '1', 'Yes', 'No', 'Thai', '30'],
-    ['Yes', 'No', 'Yes', 'No', 'Full', '3', 'No', 'Yes', 'French', '80'],
-    ['No', 'Yes', 'No', 'Yes', 'Some', '2', 'Yes', 'Yes', 'Italian', '10'],
-    ['No', 'Yes', 'No', 'No', 'None', '1', 'Yes', 'No', 'Burger', '10'],
-    ['No', 'No', 'No', 'Yes', 'Some', '2', 'Yes', 'Yes', 'Thai', '10'],
-    ['No', 'Yes', 'Yes', 'No', 'Full', '1', 'Yes', 'No', 'Burger', '80'],
-    ['Yes', 'Yes', 'Yes', 'Yes', 'Full', '3', 'No', 'Yes', 'Italian', '30'],
-    ['No', 'No', 'No', 'No', 'None', '1', 'No', 'No', 'Thai', '10'],
-    ['Yes', 'Yes', 'Yes', 'Yes', 'Full', '1', 'No', 'No', 'Burger', '60']
-]
-
-rf = RandomForest(2)
-rf.fit(dataset,classification)
-for i in rf.trees:
-    i.root.print_tree(0)
-    print("-----------------------------------------------")
-print(rf.predict(['Yes', 'No', 'No', 'Yes', 'Full', '1', 'No', 'No', 'Thai', '60']))

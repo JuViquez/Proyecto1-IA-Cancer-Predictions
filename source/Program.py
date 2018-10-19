@@ -3,8 +3,10 @@ from sklearn.preprocessing import LabelEncoder
 from source.datahandlers.DataManager import DataManager
 from source.cross_validation.CrossValidationManager import CrossValidationManager
 from source.datahandlers.FileManager import csv_to_dataset
+from source.datahandlers.BinningManager import BinningManager
 from source.utilities.Constants import DATASETS_DIRECTORY
 from source.models.neural_network.NeuralNetwork import NeuralNetwork
+from source.models.randomforest.RandomForest import RandomForest
 from source.utilities.Metrics import l0_1_loss
 
 class Program:
@@ -27,7 +29,16 @@ class Program:
         err_t = 0
         err_v = 0
         if(args.arbol):
-            prune_gain = args.umbral_poda   
+            prune_gain = args.umbral_poda  
+            BM = BinningManager()
+            self.X = self.X.tolist()
+            self.y = self.y.tolist()
+            print(type(self.y[0]))
+            BM.binning_data(self.X)
+            random_forest = RandomForest(0)
+            X_train, y_train, X_test, y_test = self.data_manager.split_train_test(self.X, self.y, test_size)
+            cvm = CrossValidationManager(random_forest, X_train, y_train, l0_1_loss)
+            cvm.cross_validation_wrapper()
             
         elif(args.red_neuronal): #neural network
             layers = args.numero_capas
