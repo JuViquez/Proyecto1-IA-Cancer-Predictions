@@ -29,16 +29,28 @@ class Program:
         err_t = 0
         err_v = 0
         if(args.arbol):
-            prune_gain = args.umbral_poda  
+            prune_gain = args.umbral_poda
             BM = BinningManager()
             self.X = self.X.tolist()
             self.y = self.y.tolist()
-            print(type(self.y[0]))
             BM.binning_data(self.X)
             random_forest = RandomForest(0)
             X_train, y_train, X_test, y_test = self.data_manager.split_train_test(self.X, self.y, test_size)
             cvm = CrossValidationManager(random_forest, X_train, y_train, l0_1_loss)
-            cvm.cross_validation_wrapper()
+            random_forest = cvm.cross_validation_wrapper()
+            err_t = cvm.err_t[cvm.learner.size]
+            print("Size del árbol: "+ str(cvm.learner.size))
+            print("Error de entrenamiento(CV): "+str(err_t))
+            err_v = cvm.error_rate(X_test, y_test)
+            print("Error de pruebas(CV): "+str(err_v)+" "+str(len(y_test)))
+            for tree in random_forest.trees:
+                tree.prune(prune_gain)
+            err_t = cvm.error_rate(X_train, y_train)
+            print("Error de entrenamiento(Prunning): "+str(err_t))
+            err_v = cvm.error_rate(X_test, y_test)
+            print("Error de pruebas(Prunning): "+str(err_v))
+            
+
             
         elif(args.red_neuronal): #neural network
             layers = args.numero_capas

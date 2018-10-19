@@ -37,15 +37,16 @@ class CrossValidationManager(object):
     def cross_validation_wrapper(self):
         size = 0
         while True: 
-            self.learner.size = size + 1
+            self.learner.size = size + 1 
             err_t, err_v = self.cross_validation()
             self.err_t.insert(size, err_t)
             self.err_v.insert(size, err_v)
             if size != 0 and self.err_v[size] > self.err_v[size-1]:
-                best_size = size + 1
+                best_size = size - 1
                 self.learner.size = best_size
                 self.learner.fit(self.X, self.y)
                 return self.learner
+            size += 1
     
     def cross_validation(self):
         fold_err_t = 0
