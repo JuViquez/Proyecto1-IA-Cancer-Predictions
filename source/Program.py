@@ -18,6 +18,8 @@ class Program:
         self.y = None
         
     def main(self, args):
+        if(args.arbol and args.red_neuronal):
+            raise ValueError("solo se puede elegir un modelo a la vez")
         dataset_path = DATASETS_DIRECTORY + '/' + args.prefijo
         print('opening ' + dataset_path)
         dataset = csv_to_dataset(dataset_path)
