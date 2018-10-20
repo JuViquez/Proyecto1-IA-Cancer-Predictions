@@ -48,11 +48,11 @@ def test_predict_None(model, X_data):
     model.size = 12
     Y = array (['Yes','No','Yes','Yes','No','Yes','No','Yes','No','No','No','Yes'])
     model.fit(X_data, Y)
-    result = model.predict(array(['Yes', 'Yes', 'Yes', 'Yes', 'Full', '1', 'No', 'No', 'Burger', '60']))
+    result = model.predict(array(['Maybe', 'Maybe', 'Maybe', 'Maybe', 'Maybe', '4', 'Maybe', 'Maybe', 'Pizza', '100']))
     assert result == "?"
 
 def test_predict(model, X_data):
-    model.size = 1
+    model.size = 7
     Y = array (['Yes','No','Yes','Yes','No','Yes','No','Yes','No','No','No','Yes'])
     model.fit(X_data, Y)
     result = model.predict(array(['Yes', 'Yes', 'Yes', 'Yes', 'Full', '1', 'No', 'No', 'Burger', '60']))
