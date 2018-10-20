@@ -4,8 +4,10 @@ from source.datahandlers.DataManager import DataManager
 from source.cross_validation.CrossValidationManager import CrossValidationManager
 from source.datahandlers.FileManager import csv_to_dataset
 from source.datahandlers.FileManager import dataset_to_csv
+from source.datahandlers.BinningManager import BinningManager
 from source.utilities.Constants import DATASETS_DIRECTORY
 from source.models.neural_network.NeuralNetwork import NeuralNetwork
+from source.models.randomforest.RandomForest import RandomForest
 from source.utilities.Metrics import l0_1_loss
 
 class Program:
@@ -27,9 +29,9 @@ class Program:
         
         err_t = 0
         err_v = 0
-        
-        if args.arbol :
-            prune_gain = args.umbral_poda
+
+        if(args.arbol):
+            err_t, err_v = self.create_random_forest(args.umbral_poda, test_size)
             
         elif args.red_neuronal: #neural network
             layers = args.numero_capas
@@ -47,8 +49,26 @@ class Program:
               '\n' + 'Error de pruebas: ' + str(err_v) + '\n')
         
     
-    def create_random_forest(self, prune_gain):
-        pass
+    def create_random_forest(self, prune_gain, test_size):
+        BM = BinningManager()
+        self.X = self.X.tolist()
+        self.y = self.y.tolist()
+        BM.binning_data(self.X)
+        random_forest = RandomForest(0)
+        X_train, y_train, X_test, y_test = self.data_manager.split_train_test(self.X, self.y, test_size)
+        cvm = CrossValidationManager(random_forest, X_train, y_train, l0_1_loss)
+        random_forest = cvm.cross_validation_wrapper()
+        err_t = cvm.err_t[cvm.learner.size]
+        print("Size del árbol: "+ str(cvm.learner.size))
+        print("Error de entrenamiento(CV): "+str(err_t))
+        err_v = cvm.error_rate(X_test, y_test)
+        print("Error de pruebas(CV): "+str(err_v))
+        if prune_gain > 0.0:
+            for tree in random_forest.trees:
+                tree.prune(prune_gain)
+        err_t = cvm.error_rate(X_train, y_train)
+        err_v = cvm.error_rate(X_test, y_test)
+        return err_t, err_v
 
     def process_neural_network(self, layers, neurons_hidden_layer,
                               activation_func, output_activation_func,
