@@ -14,7 +14,8 @@ class RandomForest(Model):
         Y = Y.tolist()
         self.trees = []
         if self.size > 0:
-            dataset_size = round(len(X)/self.size)
+            #dataset_size = round(len(X)/self.size)
+            dataset_size = len(X)
             for i in range(self.size):
                 subdataset, classification = self.split_dataset(X,Y,dataset_size)
                 tree = DecisionTree()
@@ -33,7 +34,11 @@ class RandomForest(Model):
             results[tag] += 1
         maximo = max(results, key = results.get)
         if maximo is None:
-            maximo = "?"
+            del results[None]
+            if not results:
+                maximo = "?"
+            else:
+                maximo = max(results, key = results.get)
         return maximo
 
     def split_dataset(self,X,Y,size):

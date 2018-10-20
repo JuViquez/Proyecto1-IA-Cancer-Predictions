@@ -1,4 +1,5 @@
 import math
+from random import randint
 import numpy as np
 from source.models.decisiontree.DecisionTreeNode import DecisionTreeNode
 from source.models.decisiontree.Leaf import Leaf
@@ -49,10 +50,21 @@ class Node(DecisionTreeNode):
             remainder_return += probability*self.entropy(key_probability)            
         return remainder_return
 
+    def split_features(self, size):
+        features = []
+        feature_size = int(math.sqrt(size))
+        while feature_size > 0:
+            random_feature = randint(0, size-1)
+            if random_feature not in features:
+                features.append(random_feature)
+                feature_size = feature_size - 1
+        return features
+
     def best_gain(self,subdataset,classification):
         num = next(iter(self.count_rows(classification,0).values())) / len(classification)
         dataset_entropy = self.entropy(num)
-        for i in range(len(subdataset[0])):
+        features = self.split_features(len(subdataset[0]))
+        for i in features:
             column_gain = dataset_entropy - self.remainder(subdataset,classification,i)
             if column_gain > self.gain:
                 self.gain = column_gain
@@ -66,3 +78,4 @@ class Node(DecisionTreeNode):
             if (prediction[tag]>=default[list(default)[0]]):
                 default = {tag : prediction[tag]}
         return default
+
