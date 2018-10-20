@@ -10,9 +10,9 @@ class BinningManager():
         for row in X:
             value = row[column]
             if value <= self.slices[-1][0]:
-                row[column] = str(self.slices[-1][0])+"-"+str(self.slices[-1][1])
+                row[column] = str(self.slices[-1][0])+" - "+str(self.slices[-1][1])
             elif value >= self.slices[-1][-1]:
-                row[column] = str(self.slices[-1][-2])+"-"+str(self.slices[-1][-1])
+                row[column] = str(self.slices[-1][-2])+" - "+str(self.slices[-1][-1])
             else:
                 for i in range(len(self.slices[-1])-1):
                     if value >= self.slices[-1][i] and value < self.slices[-1][i+1]:

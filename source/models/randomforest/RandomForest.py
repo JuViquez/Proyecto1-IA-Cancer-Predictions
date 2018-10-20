@@ -13,12 +13,13 @@ class RandomForest(Model):
         X = X.tolist()
         Y = Y.tolist()
         self.trees = []
-        dataset_size = round(len(X)/self.size)
-        for i in range(self.size):
-            subdataset, classification = self.split_dataset(X,Y,dataset_size)
-            tree = DecisionTree()
-            self.trees.append(tree)
-            tree.fit(subdataset,classification)
+        if self.size > 0:
+            dataset_size = round(len(X)/self.size)
+            for i in range(self.size):
+                subdataset, classification = self.split_dataset(X,Y,dataset_size)
+                tree = DecisionTree()
+                self.trees.append(tree)
+                tree.fit(subdataset,classification)
             #tree.root.print_tree(0)
     
     def predict(self,X):
