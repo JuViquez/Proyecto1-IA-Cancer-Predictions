@@ -32,6 +32,8 @@ class Program:
 
         if(args.arbol):
             err_t, err_v = self.create_random_forest(args.umbral_poda, test_size)
+            prediction_path = DATASETS_DIRECTORY + '/random_forest_predictions_' + args.prefijo
+            dataset_to_csv(prediction_path, self.data_manager.dataset)
             
         elif args.red_neuronal: #neural network
             layers = args.numero_capas
@@ -68,6 +70,10 @@ class Program:
                 tree.prune(prune_gain)
         err_t = cvm.error_rate(X_train, y_train)
         err_v = cvm.error_rate(X_test, y_test)
+
+        predictions = self.predictions_list(cvm.learner, self.X)
+        self.data_manager.add_column(predictions, column_name = 'predictions' )
+
         return err_t, err_v
 
     def process_neural_network(self, layers, neurons_hidden_layer,
@@ -110,4 +116,5 @@ class Program:
         for x in X:
             prediction = learner.predict(x)
             predictions.append(prediction)
+        print(predictions)
         return predictions

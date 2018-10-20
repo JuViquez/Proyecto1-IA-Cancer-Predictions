@@ -30,7 +30,10 @@ class RandomForest(Model):
             if tag not in results:
                 results[tag] = 0
             results[tag] += 1
-        return max(results, key = results.get)
+        maximo = max(results, key = results.get)
+        if maximo is None:
+            maximo = "?"
+        return maximo
 
     def split_dataset(self,X,Y,size):
         dataset = []
