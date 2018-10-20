@@ -37,12 +37,13 @@ class CrossValidationManager(object):
     def cross_validation_wrapper(self):
         size = 0
         while True: 
-            self.learner.size = size + 1 
+            self.learner.size = size + 1
             err_t, err_v = self.cross_validation()
             self.err_t.insert(size, err_t)
             self.err_v.insert(size, err_v)
             if size != 0 and self.err_v[size] > self.err_v[size-1]:
-                best_size = size - 1
+                best_size = size
+                print(best_size)
                 self.learner.size = best_size
                 self.learner.fit(self.X, self.y)
                 return self.learner
@@ -55,6 +56,7 @@ class CrossValidationManager(object):
         for fold in range(self.k):
             X_train, y_train, X_test, y_test = self.partition(fold)
             self.learner.fit(X_train, y_train)
+            print("fold: "+str(fold)+" arboles: "+str(len(self.learner.trees)))
             fold_err_t +=  self.error_rate(X_train, y_train)
             fold_err_v += self.error_rate(X_test, y_test)
         mean_fold_err_t = fold_err_t / self.k

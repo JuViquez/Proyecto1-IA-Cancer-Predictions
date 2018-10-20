@@ -12,7 +12,7 @@ class RandomForest(Model):
     def fit(self,X,Y):
         X = X.tolist()
         Y = Y.tolist()
-        
+        self.trees = []
         dataset_size = round(len(X)/self.size)
         for i in range(self.size):
             subdataset, classification = self.split_dataset(X,Y,dataset_size)

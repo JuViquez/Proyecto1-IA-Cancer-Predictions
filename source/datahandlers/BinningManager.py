@@ -29,7 +29,3 @@ class BinningManager():
                 chunk = [round(x,2) for x in chunk]
                 self.slices.append(chunk)
                 self.convert_data(X,column)
-"""
-bm = BinningManager()
-bm.binning_data([[0.58,2],[0.15,7],[0.25,8],[0.47,13],[0.95,24],[0.69,18],[0.29,3],[0.45,6],[0.78,9]])
-"""
