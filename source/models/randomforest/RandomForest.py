@@ -12,6 +12,7 @@ class RandomForest(Model):
     def fit(self,X,Y):
         X = X.tolist()
         Y = Y.tolist()
+        self.output = ""
         self.trees = []
         if self.size > 0:
             #dataset_size = round(len(X)/self.size)
@@ -20,8 +21,10 @@ class RandomForest(Model):
                 subdataset, classification = self.split_dataset(X,Y,dataset_size)
                 tree = DecisionTree()
                 self.trees.append(tree)
+                self.output += "Tree: " + str(i) + " \n"
                 tree.fit(subdataset,classification)
-            #tree.root.print_tree(0)
+                tree.print_tree(tree.root,0)
+                self.output += tree.output + "\n \n"
     
     def predict(self,X):
         results = {}

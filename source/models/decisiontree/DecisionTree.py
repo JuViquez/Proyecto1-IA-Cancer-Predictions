@@ -12,9 +12,11 @@ class DecisionTree(Model):
 
     def fit(self, X, Y):
         self.root = Node()
-        self.tree_learning(self.root, X, Y)
+        self.output = ""
+        self.tree_learning(self.root, X, Y, 0)
 
-    def tree_learning(self, node, subdataset, classification):
+    def tree_learning(self, node, subdataset, classification, out_level):
+        out_level += 1
         if(len(subdataset) == 0):
             return 1
         classification_values = node.count_rows(classification, 0)
@@ -29,7 +31,7 @@ class DecisionTree(Model):
                 subdataset, classification, key, node.column)
             tree_node = Node()
             tree_node.question = key
-            response = self.tree_learning(tree_node, dat, clas)
+            response = self.tree_learning(tree_node, dat, clas, out_level)
             if isinstance(response, dict):
                 response = node.plurality(response)
                 leaf_node = Leaf(
@@ -102,3 +104,12 @@ class DecisionTree(Model):
                     return branch.prediction
                 return self.prediction(branch, row)
         return None
+
+    def print_tree(self,node,out_level):
+        out_level += 1
+        if isinstance(node,Node):
+            self.output += "   " * out_level + " Node(gain:" + str(node.gain) + " value:" + str(node.question) + " column:" + str(node.column) + ") \n"
+            for branch in node.branch:
+                self.print_tree(branch,out_level)
+        else:
+            self.output += "   " * out_level + " Leaf(prediction:" + str(node.prediction) + " value:" + str(node.question) + " column:" + str(node.column) + ") \n"
