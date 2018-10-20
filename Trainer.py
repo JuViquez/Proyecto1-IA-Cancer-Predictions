@@ -19,7 +19,7 @@ def main():
     red_parser.add_argument("--unidades-por-capa", required = True, type = int,  help = 'neuronas por capa' )
     red_parser.add_argument("--funcion-activacion", required = True, help = 'funcion de activacion de las neuronas' )
     red_parser.add_argument("--funcion-activacion-salida", required = True, help = 'funcion de activacion de las neuronas de salida' )
-    red_parser.add_argument("--iteraciones-optimizador", required = True, help = 'numero de iteraciones que realizara el optimizador de la red')
+    red_parser.add_argument("--iteraciones-optimizador", required = True, type = int,  help = 'numero de iteraciones que realizara el optimizador de la red')
     red_parser.set_defaults(red_neuronal = True)
     red_parser.set_defaults(arbol = False)
     args = parser.parse_args()

@@ -54,7 +54,8 @@ class DecisionTree(Model):
 
     def prune(self,ratio):
         self.pruning_ratio = ratio
-        self.pruning(self.root)
+        if ratio > 0:
+            self.pruning(self.root)
 
     def pruning(self,node):
         if isinstance(node,Leaf):

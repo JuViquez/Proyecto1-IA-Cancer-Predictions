@@ -66,9 +66,3 @@ class Node(DecisionTreeNode):
             if (prediction[tag]>=default[list(default)[0]]):
                 default = {tag : prediction[tag]}
         return default
-
-    def print_tree(self,num):
-        num += 1
-        for node in self.branch:
-            print('  '*num + node.question+"  column: "+str(self.column)+" gain "+str(self.gain))
-            node.print_tree(num)

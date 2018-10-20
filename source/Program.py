@@ -116,5 +116,4 @@ class Program:
         for x in X:
             prediction = learner.predict(x)
             predictions.append(prediction)
-        print(predictions)
         return predictions
