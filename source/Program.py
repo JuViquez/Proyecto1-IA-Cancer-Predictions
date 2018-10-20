@@ -18,6 +18,9 @@ class Program:
         self.y = None
         
     def main(self, args):
+        if not (args.arbol ^ args.red_neuronal) :
+            raise ValueError("solo se puede elegir un modelo a la vez")
+        print(args.arbol, args.red_neuronal)
         dataset_path = DATASETS_DIRECTORY + '/' + args.prefijo
         print('opening ' + dataset_path)
         dataset = csv_to_dataset(dataset_path)
@@ -83,8 +86,8 @@ class Program:
         label_encoder = self.data_manager.create_encoder(self.y)
         self.y = label_encoder.transform(self.y)
         X_train, y_train, X_test, y_test = self.data_manager.split_train_test(self.X, self.y, test_size)
-        activation_func = self.choose_activation_function(activation_func)
-        output_activation_func = self.choose_activation_function(output_activation_func)
+        activation_func = self.tf_activation_function(activation_func)
+        output_activation_func = self.tf_activation_function(output_activation_func)
         
         neurons_output_layer = len(label_encoder.classes_)
         neural_network = NeuralNetwork(layers, neurons_hidden_layer,
@@ -100,7 +103,7 @@ class Program:
         
         return err_t, err_v
             
-    def choose_activation_function(self,activation_func):
+    def tf_activation_function(self,activation_func):
         if activation_func == 'relu':
             return tf.nn.relu
         if activation_func == 'softmax':

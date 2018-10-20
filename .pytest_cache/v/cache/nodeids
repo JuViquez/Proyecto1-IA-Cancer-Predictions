@@ -1,14 +1,8 @@
 [
-  "test/test_Node.py::test_count_rows_2d_array",
-  "test/test_Node.py::test_count_rows_list",
-  "test/test_Node.py::test_count_probability",
-  "test/test_Node.py::test_entropy_50",
-  "test/test_Node.py::test_entropy_100",
-  "test/test_Node.py::test_remainder",
-  "test/test_Node.py::test_best_gain_value",
-  "test/test_Node.py::test_best_gain_column",
-  "test/test_Node.py::test_split_dataset_empty",
-  "test/test_Node.py::test_split_dataset",
-  "test/test_Node.py::test_plurality_empty",
-  "test/test_Node.py::test_plurality"
+  "test/test_Program.py::test_main_neural_network",
+  "test/test_Program.py::test_main_random_forest",
+  "test/test_Program.py::test_main_value_error",
+  "test/test_Program.py::test_choose_activation_function_output",
+  "test/test_Program.py::test_choose_activation_function_value_error",
+  "test/test_Program.py::test_prediction_list"
 ]
