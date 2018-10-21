@@ -73,6 +73,7 @@ class Program:
                 tree.prune(prune_gain)
         err_t = cvm.error_rate(X_train, y_train)
         err_v = cvm.error_rate(X_test, y_test)
+        
 
         predictions = self.predictions_list(cvm.learner, self.X)
         self.data_manager.add_column(predictions, column_name = 'predictions' )
