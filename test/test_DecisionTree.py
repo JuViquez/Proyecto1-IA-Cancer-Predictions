@@ -55,10 +55,6 @@ def test_split_dataset(model):
     dataset, classification = model.split_dataset(dataset,classification,'0',1)
     assert dataset == result_dataset and classification == result_class
 
-def test_prune(model):
-    model.prune(0.5)
-    assert isinstance(model.root.branch[1],Node) 
-
 def test_prune_1(model):
     model.prune(1)
     assert isinstance(model.root.branch[1],Leaf) 
@@ -76,3 +72,7 @@ def test_predict_Yes(model):
     X = ['No', 'Yes', 'No', 'No', 'Some', '1', 'No', 'No', 'Burger', '10']
     prediction = model.predict(X)
     assert prediction != 'No'
+
+def test_print_tree(model):
+    model.print_tree(model.root,0)
+    assert model.output

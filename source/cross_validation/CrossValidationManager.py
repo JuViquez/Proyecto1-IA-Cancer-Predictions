@@ -4,6 +4,7 @@ class CrossValidationManager(object):
     
     def __init__(self, learner, X, y, loss_function, k = 10):
         self.learner = learner
+        self.log = ""
         self.k = k
         self.X = X
         self.y = y
@@ -36,22 +37,19 @@ class CrossValidationManager(object):
     
     def cross_validation_wrapper(self):
         size = 0
-        log = ""
+        self.log = ""
         while True: 
             self.learner.size = size + 1
             err_t, err_v = self.cross_validation()
             self.err_t.insert(size, err_t)
             self.err_v.insert(size, err_v)
-            log += "Model size: " + str(self.learner.size) + "\n"
-            log += "Training error: " + str(self.err_t[size]) + " validation error: " + str(self.err_v[size]) + "\n"
+            self.log += "Model size: " + str(self.learner.size) + "\n"
+            self.log += "Training error: " + str(self.err_t[size]) + " validation error: " + str(self.err_v[size]) + "\n"
             if size != 0 and self.err_v[size] > self.err_v[size-1]:
                 best_size = size
                 self.learner.size = best_size
                 self.learner.fit(self.X, self.y)
-                log += self.learner.output
-                f = open('logs/output_model.txt','w')
-                f.write(log)
-                f.close()
+                self.log += self.learner.output
                 return self.learner
             size += 1
     

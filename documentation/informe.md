@@ -16,8 +16,6 @@ Las funciones de activación corresponden a criterios de cada neurona en donde d
 
 Para la creación y entrenamiento de la red neuronal en este proyecto, se utilizo la biblioteca tensorflow creada por Google la cual nos brinda gran cantidad de opciones para creación de modelos de learning.  También se hizo uso de la biblioteca Keras como interfaz intermediaria.  Tensorflow recibe los siguientes parámetros:
 
-
-
 Numero de capas:  Cantidad de capas que el modelo va a tener.
 
 Neuronas por capa: Cantidad de neuronas de cada capa intermedia.
@@ -27,8 +25,6 @@ Neuronas de salida: Cantidad de neuronas en la capa de salida.
 Función de activación: Función de activación de las neuronas intermedias.
 
 Función de activación de salida: Función de activación de las neuronas de salida.
-
-
 
 ### Decission Tree
 
@@ -46,11 +42,9 @@ La selección de un predicado en un nivel del árbol determina que tanto se dism
 
 La entropia de un sistema se refiere a la medida de incertidumbre. Un sistema totalmente parcial no posee incertidumbre probabilistica, por lo cual su entropía es cero. Mientras tanto, un sistema con igual probabilidad en cada uno de sus posibilidades es un sistema inparcial cuya entropía corresponde a uno. La fórmula usada para calcular la entropía de la variable V  con d cantidad distinto de valores es la siguiente:
 
-
 #### Ganancia
 
 La ganancia se refiere a la cantidad de entropia resultante de un sistema luego de que el conjunto de datos haya sido dividido a base de un atributo en específico. Su fórmula esta dada por la entropía menos el residuo que otorga la selección del atributo. El residuo es calculado de la siguiente manera:
-
 
 El diseño e implementación del algoritmo Decission Tree esta basado en el algoritmo de la página 702 del libro "**_Artifical Intelligence a Modern Aproach Third Edition_ (AIMA)**" 
 
@@ -59,6 +53,23 @@ El diseño e implementación del algoritmo Decission Tree esta basado en el algo
 Random Forest es un modelo de learning que utiliza como base los árboles de decisión para emitir una predicción. Su mecanismo consiste en crear __n__ cantidad de árboles de decisión y realizar una votación sobre las predicciones de todos, por mayoría se escoge la predicción a devolver.  El subconjunto de datos para entrenar cada árbol se escoge de manera aleatoria con reemplazo de entre todos los datos.  Para la implementación del random forest de este proyecto, el tamaño del subconjunto de datos es equivalente al del conjunto total y la complejidad corresponde al número de árboles.
 
 La estrategia para escoger la mejor partición de cada nodo cambia con respecto al algoritmo de _Tree Bagging_. En esta implementación no se toma en cuenta todos los atributos (columnas) que tenga el dataset del árbol, sino se escoge de manera aleatoria un subconjunto de atributos y entre ellos se hace el análisis de ganancia. El tamaño de este subconjunto está dado por la raíz cuadrada redondeada al menor de la cantidad total de atributos del dataset. Para mayor información al respecto, el estándar del algoritmo usado en random forest lo puede encontrar [aquí](https://en.wikipedia.org/wiki/Random_forest).
+
+
+
+## Guía de instalación
+
+El proyecto esta construido en el lenguaje de programación Python. Recomendamos el uso de Python 3.5 debido a que algunas bibliotecas que utiliza el proyecto, aún no se encuentran disponibles en versiones posteriores. Para obtener el proyecto, proceda a descargarlo de https://github.com/JuViquez/Proyecto1-IA-Cancer-Predictions.git o bien realice un _git clone_. Para instalar las dependencias se utiliza pip. A continuación, la lista de comandos a ejecutar en el orden correspondiente para ejecutar el proyecto:
+
+```python
+pip install pandas
+pip install numpy
+pip install keras
+pip install -U scikit-learn
+pip install pytest
+pip install pytest-cov
+```
+
+
 
 ## Análisis de resultados
 
@@ -114,7 +125,3 @@ Una característica particular de los árboles de decisión es la capacidad de p
 | 0.4           | 0.0032                               | 0                                 |
 
 Tal y como se puede observar en los resultados, podar el árbol no posee ganancia alguna en el modelo. No tomamos en cuenta criterios menores a 0.2 ya que nos parecen insignificantes y pocos nodos realmente llegan a tener ese nivel de ganancia. Por otra parte, podar el árbol con niveles mayores a 0.4 incrementa drásticamente la diferencia de error de entrenamiento, mientras que la diferencia de error de validación permanece casi nula. Podar árboles es una estrategia empleada para combatir árboles complejos que tienden a _overfitting_, pero los random forest son un modelo bastante bueno evitando estos casos, por lo tanto la ganancia no se ve reflejada.
-
-
-
-
