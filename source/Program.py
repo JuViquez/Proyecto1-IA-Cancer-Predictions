@@ -78,7 +78,7 @@ class Program:
                 tree.prune(prune_gain)
         err_t = cvm.error_rate(X_train, y_train)
         err_v = cvm.error_rate(X_test, y_test)
-        f = open('logs/output_model.txt', 'w')
+        f = open('logs/log_random_forest.txt', 'w')
         f.write(cvm.log)
         f.close()
 
