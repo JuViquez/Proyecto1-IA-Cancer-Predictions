@@ -58,8 +58,6 @@ Random Forest es un modelo de learning que utiliza como base los árboles de dec
 
 La estrategia para escoger la mejor partición de cada nodo cambia con respecto al algoritmo de _Tree Bagging_. En esta implementación no se toma en cuenta todos los atributos (columnas) que tenga el dataset del árbol, sino se escoge de manera aleatoria un subconjunto de atributos y entre ellos se hace el análisis de ganancia. El tamaño de este subconjunto está dado por la raíz cuadrada redondeada al menor de la cantidad total de atributos del dataset. Para mayor información al respecto, el estándar del algoritmo usado en random forest lo puede encontrar [aquí](https://en.wikipedia.org/wiki/Random_forest).
 
-
-
 ## Guía de instalación y ejecución
 
 El proyecto esta construido en el lenguaje de programación Python. Recomendamos el uso de Python 3.5 debido a que algunas bibliotecas que utiliza el proyecto, aún no se encuentran disponibles en versiones posteriores. Para obtener el proyecto, proceda a descargarlo de https://github.com/JuViquez/Proyecto1-IA-Cancer-Predictions.git o bien realice un _git clone_. Para instalar las dependencias se utiliza pip. A continuación, la lista de comandos a ejecutar en el orden correspondiente para ejecutar el proyecto:
@@ -80,7 +78,6 @@ Ejemplos de ejecución de código:
 python trainer.py --prefijo breast_cancer.csv --indice_columna_y 1 --porcentaje-pruebas 0.15 arbol --umbral-poda 0.2
 #Ejemplo de red:
 python Trainer.py --prefijo breast_cancer.csv --indice_columna_y 1 --porcentaje-pruebas 0.15 red-neuronal --numero-capas 5 --unidades-por-capa 20 --funcion-activacion relu --funcion-activacion-salida softmax --iteraciones-optimizador 20
-
 ```
 
 ## Análisis de resultados
@@ -137,6 +134,44 @@ Una característica particular de los árboles de decisión es la capacidad de p
 | 0.4           | 0.0032                               | 0                                 |
 
 Tal y como se puede observar en los resultados, podar el árbol no posee ganancia alguna en el modelo. No tomamos en cuenta criterios menores a 0.2 ya que nos parecen insignificantes y pocos nodos realmente llegan a tener ese nivel de ganancia. Por otra parte, podar el árbol con niveles mayores a 0.4 incrementa drásticamente la diferencia de error de entrenamiento, mientras que la diferencia de error de validación permanece casi nula. Podar árboles es una estrategia empleada para combatir árboles complejos que tienden a _overfitting_, pero los random forest son un modelo bastante bueno evitando estos casos, por lo tanto la ganancia no se ve reflejada.
+
+## Comparación de ambos modelos
+
+Una vez definidos los hiperparámetros de cad auno de los dos modelos, se procede a comparar los resultados de cada uno para determinar cuál es el modelo más indicado. Para la comparación se hizo un análisis de Falsos Positivos, Falsos Negativos, Verdaderos Positivos y Verdaderos Negativos sobre las predicciones de maligno, ya que debido a la naturaleza del problema, resulta más costoso diagnosticar fallar en el diagnóstico de un tumor maligno. Se utilizaron las siguiente métricas para el análisis del resultado:
+
+- **Exhaustividad** = Verdaderos Positivos / (Verdaderos Positivos + Falsos Negativos)
+
+- **Precisión** = Verdaderos Positivos / (Verdaderos Positivos + Falsos Positivos)
+
+- **F1 Score** = 2 * Exhaustividad * Precisión / (Exhaustividad + Precisión)
+
+- **F1 Score Custom** = 2 *  (Exhaustividad)² *  Precisión / (Exhaustividad + Precisión)
+
+El F1 Score custom es una métrica propuesta por nosotros, esto con el fin de penalizar modelos con más baja exhaustividad debido al costo de diagnosticar un falso negativo de tumor maligno. Las pruebas constaron de diez iteraciones distintas de cada modelo. El promedio de los resultados obtenidos es el siguiente:
+
+#### Random Forest:
+
+Exhaustividad = 0.96645
+
+Precisión = 0.97786
+
+F1 Score = 0.9719
+
+F1 Score Custom = 0.9394
+
+#### Redes Neuronales:
+
+Exhaustividad = 0.9735
+
+Precisión = 0.9843
+
+F1 Score = 0.9788
+
+F1 Score Custom = 0.9527
+
+
+
+En estos resultados, podemos ver una diferencia porcentual de alrededor de 2 puntos a favor de las redes neuronales en la métrica de F1 Score Custom. En general, el modelo de redes neuronales obtuvo un mejor desempeño en las predicciones, por lo tanto se puede concluir que es el modelo que más conviene utilizar. Los resultados completos se pueden observar en el archivo **analisis_resultados.xlsx** en la pestaña Comparación Modelos.
 
 ### Covertura de pruebas
 
