@@ -42,9 +42,13 @@ La selección de un predicado en un nivel del árbol determina que tanto se dism
 
 La entropia de un sistema se refiere a la medida de incertidumbre. Un sistema totalmente parcial no posee incertidumbre probabilistica, por lo cual su entropía es cero. Mientras tanto, un sistema con igual probabilidad en cada uno de sus posibilidades es un sistema inparcial cuya entropía corresponde a uno. La fórmula usada para calcular la entropía de la variable V  con d cantidad distinto de valores es la siguiente:
 
+![](https://github.com/JuViquez/Proyecto1-IA-Cancer-Predictions/blob/master/documentation/charts/Entropia.PNG?raw=true)
+
 #### Ganancia
 
 La ganancia se refiere a la cantidad de entropia resultante de un sistema luego de que el conjunto de datos haya sido dividido a base de un atributo en específico. Su fórmula esta dada por la entropía menos el residuo que otorga la selección del atributo. El residuo es calculado de la siguiente manera:
+
+![](https://github.com/JuViquez/Proyecto1-IA-Cancer-Predictions/blob/master/documentation/charts/Ganancia.PNG?raw=true)
 
 El diseño e implementación del algoritmo Decission Tree esta basado en el algoritmo de la página 702 del libro "**_Artifical Intelligence a Modern Aproach Third Edition_ (AIMA)**" 
 
@@ -136,7 +140,7 @@ Tal y como se puede observar en los resultados, podar el árbol no posee gananci
 
 ### Covertura de pruebas
 
-
+![](https://github.com/JuViquez/Proyecto1-IA-Cancer-Predictions/blob/master/documentation/cov-test.PNG?raw=true)
 
 ### Distribución de trabajo
 
