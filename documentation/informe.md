@@ -46,14 +46,10 @@ La selección de un predicado en un nivel del árbol determina que tanto se dism
 
 La entropia de un sistema se refiere a la medida de incertidumbre. Un sistema totalmente parcial no posee incertidumbre probabilistica, por lo cual su entropía es cero. Mientras tanto, un sistema con igual probabilidad en cada uno de sus posibilidades es un sistema inparcial cuya entropía corresponde a uno. La fórmula usada para calcular la entropía de la variable V  con d cantidad distinto de valores es la siguiente:
 
-![equation](http://www.sciweavers.org/upload/Tex2Img_1540079874/render.png)
 
 #### Ganancia
 
 La ganancia se refiere a la cantidad de entropia resultante de un sistema luego de que el conjunto de datos haya sido dividido a base de un atributo en específico. Su fórmula esta dada por la entropía menos el residuo que otorga la selección del atributo. El residuo es calculado de la siguiente manera:
-
-![equation](http://www.sciweavers.org/upload/Tex2Img_1540079826/render.png)
-
 
 
 El diseño e implementación del algoritmo Decission Tree esta basado en el algoritmo de la página 702 del libro "**_Artifical Intelligence a Modern Aproach Third Edition_ (AIMA)**" 
@@ -85,6 +81,8 @@ Los hiperparámetros a configurar cada vez que se crea un modelo son número de 
 | 6 - 15         | 0.0089                       | 0.0252                    |
 | 6 - 20         | 0.0035                       | 0.0313                    |
 
+![](https://github.com/JuViquez/Proyecto1-IA-Cancer-Predictions/blob/master/documentation/charts/chart_redes.PNG?raw=true)
+
 Las iteraciones de 6 capas con 25 y 30 unidades por capa no se realizaron debido a que el costo de la complejidad de la red neuronal era muy grande para la ganancia mínima, con respecto a los modelos anteriores, que se iba a obtener de estas configuraciones. Dado estos resultados, el equipo de trabajo llegó a la conclusión que la mejor configuración para crear el modelo corresponde a 4 capas con 20 unidades, esto debido a que el error de entrenamiento y de validación observado son lo suficientemente pequeños para aceptarlos y aunque el modelo de 5 capas con 30 unidades posea mejor registro en error de entrenamiento, su nivel de complejidad debilita esta elección en comparación a la de 4 capas con 20 unidades.
 
 ### Random Forest
@@ -101,6 +99,8 @@ El modelo de Random Forest recibe como parámetro el porcentaje del dataset orig
 | 25%         | 0.0117                          | 0.0724                       | 3                        |
 | 30%         | 0.0223                          | 0.0734                       | 3.71                     |
 
+![](https://github.com/JuViquez/Proyecto1-IA-Cancer-Predictions/blob/master/documentation/charts/chart_err_val.PNG?raw=true)
+![](https://github.com/JuViquez/Proyecto1-IA-Cancer-Predictions/blob/master/documentation/charts/chart_err_ent.PNG?raw=true)
 Los resultados son concisos y contundentes, el porcentaje de partición que asegura la menor tasa de error tanto en entrenamiento como en validación es 15% y a pesar de que la media de su complejidad es la segunda más elevada, estamos tratando con complejidades de alrededor de 4.5, lo cual sigue siendo manejable en términos computacionales.
 
 #### Criterio de poda
