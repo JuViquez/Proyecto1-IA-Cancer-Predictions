@@ -1,5 +1,9 @@
 # Predicciones sobre de cancer de mama
 
+Integrantes: José Antonio Salas Bonilla 2015013633, Julio Viquez Murillo 2015013680
+
+repositorio: https://github.com/JuViquez/Proyecto1-IA-Cancer-Predictions.git
+
 ## Descripción del problema
 
 A partir de un dataset de muestras de tejidos que pueden ser benignos o malignos se realizó dos modelos de Machine Learning en lenguaje de programación _Python 3_, Random Forest y Redes Neuronales, para intentar predecir con el menor margen de error posible si dados ciertos datos, se puede deducir que el tejido es maligno o benigno. El dataset utilizado para el entrenamiento de estos modelos puede ser encontrado [aquí](https://www.kaggle.com/uciml/breast-cancer-wisconsin-data).
