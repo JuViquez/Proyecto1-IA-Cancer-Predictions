@@ -1,6 +1,6 @@
 class DecisionTreeNode():
     def __init__(self,
-                question,
-                column):
+                 question,
+                 column):
         self.question = question
         self.column = column

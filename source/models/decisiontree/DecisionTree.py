@@ -105,11 +105,13 @@ class DecisionTree(Model):
                 return self.prediction(branch, row)
         return None
 
-    def print_tree(self,node,out_level):
+    def print_tree(self, node, out_level):
         out_level += 1
-        if isinstance(node,Node):
-            self.output += "   " * out_level + " Node(gain:" + str(node.gain) + " value:" + str(node.question) + " column:" + str(node.column) + ") \n"
+        if isinstance(node, Node):
+            self.output += "   " * out_level + " Node(gain:" + str(node.gain) + " value:" + str(
+                node.question) + " column:" + str(node.column) + ") \n"
             for branch in node.branch:
-                self.print_tree(branch,out_level)
+                self.print_tree(branch, out_level)
         else:
-            self.output += "   " * out_level + " Leaf(prediction:" + str(node.prediction) + " value:" + str(node.question) + " column:" + str(node.column) + ") \n"
+            self.output += "   " * out_level + " Leaf(prediction:" + str(
+                node.prediction) + " value:" + str(node.question) + " column:" + str(node.column) + ") \n"

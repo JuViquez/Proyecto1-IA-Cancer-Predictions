@@ -1,7 +1,11 @@
 {
-  "test/test_CrossValidationManager.py": true,
+  "test/test_CrossValidationManager.py::test_error_rate_output": true,
+  "test/test_CrossValidationManager.py::test_partition_output_0": true,
+  "test/test_DecisionTree.py::test_fit": true,
+  "test/test_DecisionTree.py::test_prune_0": true,
   "test/test_FileManager.py::test_dataset_to_csv_file_exist": true,
   "test/test_FileManager.py::test_write_to_log_file_exist": true,
+  "test/test_NeuralNetwork.py::test_fit_tf_parameters": true,
   "test/test_Node.py::test_split_dataset": true,
   "test/test_Node.py::test_split_dataset_empty": true
 }

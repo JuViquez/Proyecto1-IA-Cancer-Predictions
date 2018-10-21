@@ -3,10 +3,23 @@ from source.models.decisiontree.Leaf import Leaf
 from source.models.decisiontree.Node import Node
 from source.models.decisiontree.DecisionTree import DecisionTree
 
+
 @pytest.fixture()
 def model():
     ex_dt = DecisionTree()
-    classification = ['Yes','No','Yes','Yes','No','Yes','No','Yes','No','No','No','Yes']
+    classification = [
+        'Yes',
+        'No',
+        'Yes',
+        'Yes',
+        'No',
+        'Yes',
+        'No',
+        'Yes',
+        'No',
+        'No',
+        'No',
+        'Yes']
     dataset = [
         ['Yes', 'No', 'No', 'Yes', 'Some', '3', 'No', 'Yes', 'French', '10'],
         ['Yes', 'No', 'No', 'Yes', 'Full', '1', 'No', 'No', 'Thai', '60'],
@@ -21,58 +34,67 @@ def model():
         ['No', 'No', 'No', 'No', 'None', '1', 'No', 'No', 'Thai', '10'],
         ['Yes', 'Yes', 'Yes', 'Yes', 'Full', '1', 'No', 'No', 'Burger', '60']
     ]
-    ex_dt.fit(dataset,classification)
+    ex_dt.fit(dataset, classification)
     return ex_dt
 
+
 def test_fit(model):
-    assert round(model.root.gain,2) >= 0.2
+    assert round(model.root.gain, 2) >= 0.2
+
 
 def test_split_dataset_empty(model):
-    dataset, classification = model.split_dataset([],[],'0',0)
+    dataset, classification = model.split_dataset([], [], '0', 0)
     assert not dataset and not classification
+
 
 def test_split_dataset(model):
     dataset = [
-        ['T','0'],['F','0'],['T','0'],
-        ['F','0'],['T','0'],['F','0'],
-        ['T','1'],['F','1'],['T','1'],
-        ['F','1'],['T','1'],['F','1'],
+        ['T', '0'], ['F', '0'], ['T', '0'],
+        ['F', '0'], ['T', '0'], ['F', '0'],
+        ['T', '1'], ['F', '1'], ['T', '1'],
+        ['F', '1'], ['T', '1'], ['F', '1'],
     ]
     classification = [
-        'Yes','Yes','Yes',
-        'Yes','Yes','Yes',
-        'No','No','No',
-        'No','No','No'
+        'Yes', 'Yes', 'Yes',
+        'Yes', 'Yes', 'Yes',
+        'No', 'No', 'No',
+        'No', 'No', 'No'
     ]
-    result_dataset =[
-        ['T'],['F'],['T'],
-        ['F'],['T'],['F']
+    result_dataset = [
+        ['T'], ['F'], ['T'],
+        ['F'], ['T'], ['F']
     ]
     result_class = [
-        'Yes','Yes','Yes',
-        'Yes','Yes','Yes'
+        'Yes', 'Yes', 'Yes',
+        'Yes', 'Yes', 'Yes'
     ]
-    dataset, classification = model.split_dataset(dataset,classification,'0',1)
+    dataset, classification = model.split_dataset(
+        dataset, classification, '0', 1)
     assert dataset == result_dataset and classification == result_class
+
 
 def test_prune_1(model):
     model.prune(1)
-    assert isinstance(model.root.branch[1],Leaf) 
+    assert isinstance(model.root.branch[1], Leaf)
+
 
 def test_prune_0(model):
     model.prune(0.0)
-    assert isinstance(model.root.branch[1],Node)
+    assert isinstance(model.root.branch[1], Node)
+
 
 def test_predict_No(model):
     X = ['Yes', 'No', 'No', 'Yes', 'Full', '1', 'No', 'No', 'Thai', '60']
     prediction = model.predict(X)
     assert prediction != 'Yes'
 
+
 def test_predict_Yes(model):
     X = ['No', 'Yes', 'No', 'No', 'Some', '1', 'No', 'No', 'Burger', '10']
     prediction = model.predict(X)
     assert prediction != 'No'
 
+
 def test_print_tree(model):
-    model.print_tree(model.root,0)
+    model.print_tree(model.root, 0)
     assert model.output

@@ -56,7 +56,7 @@ La estrategia para escoger la mejor partición de cada nodo cambia con respecto 
 
 
 
-## Guía de instalación
+## Guía de instalación y ejecución
 
 El proyecto esta construido en el lenguaje de programación Python. Recomendamos el uso de Python 3.5 debido a que algunas bibliotecas que utiliza el proyecto, aún no se encuentran disponibles en versiones posteriores. Para obtener el proyecto, proceda a descargarlo de https://github.com/JuViquez/Proyecto1-IA-Cancer-Predictions.git o bien realice un _git clone_. Para instalar las dependencias se utiliza pip. A continuación, la lista de comandos a ejecutar en el orden correspondiente para ejecutar el proyecto:
 
@@ -69,7 +69,15 @@ pip install pytest
 pip install pytest-cov
 ```
 
+Ejemplos de ejecución de código:
 
+```python
+#Ejemplo de árbol:
+python trainer.py --prefijo breast_cancer.csv --indice_columna_y 1 --porcentaje-pruebas 0.15 arbol --umbral-poda 0.2
+#Ejemplo de red:
+python Trainer.py --prefijo breast_cancer.csv --indice_columna_y 1 --porcentaje-pruebas 0.15 red-neuronal --numero-capas 5 --unidades-por-capa 20 --funcion-activacion relu --funcion-activacion-salida softmax --iteraciones-optimizador 20
+
+```
 
 ## Análisis de resultados
 
@@ -125,3 +133,31 @@ Una característica particular de los árboles de decisión es la capacidad de p
 | 0.4           | 0.0032                               | 0                                 |
 
 Tal y como se puede observar en los resultados, podar el árbol no posee ganancia alguna en el modelo. No tomamos en cuenta criterios menores a 0.2 ya que nos parecen insignificantes y pocos nodos realmente llegan a tener ese nivel de ganancia. Por otra parte, podar el árbol con niveles mayores a 0.4 incrementa drásticamente la diferencia de error de entrenamiento, mientras que la diferencia de error de validación permanece casi nula. Podar árboles es una estrategia empleada para combatir árboles complejos que tienden a _overfitting_, pero los random forest son un modelo bastante bueno evitando estos casos, por lo tanto la ganancia no se ve reflejada.
+
+### Covertura de pruebas
+
+
+
+### Distribución de trabajo
+
+El trabajo de ambos integrantes fue equivalente, por lo tanto se recomienda repartir la nota en partes iguales.
+
+**Julio Viquez Murillo 2015013680:**
+
+- Implementación y pruebas redes neuronales
+
+- Implementación y pruebas de cross validation
+
+- Implementación y pruebas de Trainer.py / Program.py
+
+- Diseño del programa
+
+**José Antonio Salas Bonilla 2015013633:**
+
+- Implementación y pruebas de árboles de decisión
+
+- Implementación y pruebas de random forest
+
+- Análisis de resultados
+
+- Documentación y bitácora
